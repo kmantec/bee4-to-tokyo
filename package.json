@@ -1,0 +1,9 @@
+{
+  "name": "bee4-to-tokyo",
+  "version": "2.1.0-learn-mode",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "python3 -m http.server 8000"
+  }
+}
