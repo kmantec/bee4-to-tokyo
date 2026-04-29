@@ -90,6 +90,8 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  /* Top safe area for iOS Safari (notch / status bar) */
+  padding-top: env(safe-area-inset-top);
 }
 .screen.has-nav .screen-scroll { padding-bottom: var(--nav-height); }
 
