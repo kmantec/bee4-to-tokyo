@@ -840,9 +840,9 @@ function renderAnagram() {
       </div>
 
       <div class="px-5 mb-4 animate-slide-up">
-        <div class="premium-card rounded-3xl p-7">
+        <div class="premium-card rounded-3xl p-5 sm:p-7">
           <p class="text-[10px] tracking-wider uppercase font-semibold text-navy-500/55 mb-3 text-center">Scrambled Letters</p>
-          <p class="font-display text-4xl font-bold text-navy-500 num-badge text-center tracking-widest mb-5">${scrambled}</p>
+          <p class="font-display font-bold text-navy-500 num-badge text-center mb-5 leading-tight" style="font-size: clamp(1.25rem, ${Math.min(80 / scrambled.length, 8)}vw, 2.5rem); letter-spacing: ${scrambled.length > 10 ? '0.02em' : '0.08em'};">${scrambled}</p>
 
           <div class="bg-navy-50 rounded-2xl p-4 mb-4">
             <p class="text-[10px] tracking-wider uppercase font-semibold text-navy-500/55 mb-1">Definition (${w.pos})</p>
@@ -850,8 +850,8 @@ function renderAnagram() {
           </div>
 
           <input id="anagramInput" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
-                 placeholder="type the unscrambled word..."
-                 class="spell-input w-full px-4 py-4 text-2xl font-bold text-center bg-cream rounded-xl border-2 border-navy-100 focus:border-navy-500 transition" />
+                 placeholder="your answer..."
+                 class="spell-input w-full px-4 py-4 text-xl sm:text-2xl font-bold text-center bg-cream rounded-xl border-2 border-navy-100 focus:border-navy-500 transition" />
 
           <button onclick="window.b4t.submitAnagram()" class="btn-primary w-full mt-3 py-4 rounded-xl font-bold tracking-wide">
             Check Answer
