@@ -60,6 +60,71 @@ export const LISTENING_SCRIPTS = [
       { before: "The whole experience was truly", gap: "unforgettable", after: "." },
     ],
   },
+  {
+    id: "music-concert",
+    level: 4,
+    title: "First Music Concert",
+    fullText: "Last weekend I attended my very first orchestra concert. The musicians performed with incredible precision and passion. I was fascinated by the conductor's energy throughout the evening. The audience was completely silent during the most emotional moments. The standing ovation at the end was absolutely unforgettable.",
+    segments: [
+      { before: "Last weekend I attended my very first", gap: "orchestra", after: "concert." },
+      { before: "The musicians performed with incredible", gap: "precision", after: "and passion." },
+      { before: "I was", gap: "fascinated", after: "by the conductor's energy throughout the evening." },
+      { before: "The audience was completely silent during the most", gap: "emotional", after: "moments." },
+      { before: "The standing ovation at the end was absolutely", gap: "unforgettable", after: "." },
+    ],
+  },
+  {
+    id: "weekend-plans",
+    level: 4,
+    title: "Weekend Plans",
+    fullText: "This Saturday my friends and I are organising a small picnic. We are planning to visit the botanical gardens in the afternoon. Each person will bring their favourite homemade dish to share. The weather forecast predicts a beautiful sunny day. We expect this gathering to be very enjoyable for everyone.",
+    segments: [
+      { before: "This Saturday my friends and I are", gap: "organising", after: "a small picnic." },
+      { before: "We are planning to visit the", gap: "botanical", after: "gardens in the afternoon." },
+      { before: "Each person will bring their favourite", gap: "homemade", after: "dish to share." },
+      { before: "The weather", gap: "forecast", after: "predicts a beautiful sunny day." },
+      { before: "We expect this gathering to be very", gap: "enjoyable", after: "for everyone." },
+    ],
+  },
+  {
+    id: "online-class",
+    level: 4,
+    title: "Online Class Experience",
+    fullText: "I have recently started taking an online photography course. The instructor explains every concept very clearly and patiently. Each lesson includes practical exercises and creative assignments. We meet once a week for group discussions and feedback. This experience has significantly improved my technical skills.",
+    segments: [
+      { before: "I have recently started taking an online", gap: "photography", after: "course." },
+      { before: "The", gap: "instructor", after: "explains every concept very clearly and patiently." },
+      { before: "Each lesson includes practical exercises and creative", gap: "assignments", after: "." },
+      { before: "We meet once a week for group", gap: "discussions", after: "and feedback." },
+      { before: "This experience has", gap: "significantly", after: "improved my technical skills." },
+    ],
+  },
+  {
+    id: "school-project",
+    level: 4,
+    title: "School Project",
+    fullText: "Our class is preparing a major presentation about renewable energy. Each team is responsible for a different aspect of the topic. We have spent weeks gathering information from reliable sources. The teacher will evaluate our research, design, and delivery. We are all hoping for an excellent grade on this important project.",
+    segments: [
+      { before: "Our class is preparing a major", gap: "presentation", after: "about renewable energy." },
+      { before: "Each team is", gap: "responsible", after: "for a different aspect of the topic." },
+      { before: "We have spent weeks gathering information from", gap: "reliable", after: "sources." },
+      { before: "The teacher will", gap: "evaluate", after: "our research, design, and delivery." },
+      { before: "We are all hoping for an", gap: "excellent", after: "grade on this important project." },
+    ],
+  },
+  {
+    id: "library-visit",
+    level: 4,
+    title: "Visit to the Library",
+    fullText: "Yesterday I spent the entire afternoon at the city library. The librarian recommended several biographies of famous scientists. I borrowed three books on environmental conservation topics. The atmosphere there is perfect for serious studying and reading. I plan to return next weekend with my younger sister.",
+    segments: [
+      { before: "Yesterday I spent the entire afternoon at the city", gap: "library", after: "." },
+      { before: "The", gap: "librarian", after: "recommended several biographies of famous scientists." },
+      { before: "I borrowed three books on environmental", gap: "conservation", after: "topics." },
+      { before: "The", gap: "atmosphere", after: "there is perfect for serious studying and reading." },
+      { before: "I plan to return next weekend with my", gap: "younger", after: "sister." },
+    ],
+  },
 
   // ============================================================
   // BEE 5 (CEFR C1)
