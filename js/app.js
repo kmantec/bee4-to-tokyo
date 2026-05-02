@@ -1611,6 +1611,36 @@ const ERROR_DRILLS = HIGH_VALUE_WORDS.filter(w=>LEARN_CARDS[w][5]).map(w=>[LEARN
 const BRAINSTORM_DRILLS = [
   ['WEATHER','B','A severe snow storm with strong winds.','blizzard','Think category: snow/storm/cold/rain/heat.'],['WEATHER','C','Quite cold; sounds like a South American country.','chilly','Sound clue: Chile → chilly.'],['WEATHER','D','Rain in very small drops.','drizzle','Light rain words.'],['WEATHER','F','A sudden light fall of snow blown by wind.','flurry','Snow + wind category.'],['WEATHER','H','A very hot period for days or weeks.','heatwave','Compound: heat + wave.'],['PERSONALITY','A','A person who shows love or liking for someone.','admirer','Person noun: -er.'],['PERSONALITY','M','One day happy, next day sad.','moody','Mood changes → moody.'],['PERSONALITY','F','Can adapt to new situations.','flexible','Meaning first.'],['PERSONALITY','A','Wants to achieve a lot in life.','ambitious','Personality adjective.'],['PERSONALITY','I','Not confident about themself.','insecure','in- means not.'],['COUNTRYSIDE','F','A large area of land with grass or crops.','field','Land/farm category.'],['COUNTRYSIDE','W','Animals and plants of the natural world.','wildlife','wild + life.'],['COUNTRYSIDE','C','A small house in the countryside.','cottage','Double t.'],['COUNTRYSIDE','S','A continuous body of flowing water.','stream','Water category.']
 ];
+
+const UK_US_DRILLS = [
+  ['color', 'colour', '-or → -our', 'Many British spellings add u after o: colour, favourite, behaviour.'],
+  ['favorite', 'favourite', '-or → -our', 'The UK form keeps the u: favourite.'],
+  ['flavor', 'flavour', '-or → -our', 'Food words often use -our in UK spelling: flavour.'],
+  ['neighbor', 'neighbour', '-or → -our', 'UK spelling: neighbour.'],
+  ['behavior', 'behaviour', '-or → -our', 'UK spelling: behaviour.'],
+  ['center', 'centre', '-er → -re', 'Some words reverse -er to -re in UK spelling: centre, theatre.'],
+  ['theater', 'theatre', '-er → -re', 'UK spelling uses -re: theatre.'],
+  ['meter', 'metre', '-er → -re', 'For the unit of length, UK spelling is metre.'],
+  ['liter', 'litre', '-er → -re', 'UK spelling is litre.'],
+  ['organize', 'organise', '-ize → -ise', 'In British-style competition spelling, practise -ise forms.'],
+  ['realize', 'realise', '-ize → -ise', 'US -ize often becomes UK -ise.'],
+  ['recognize', 'recognise', '-ize → -ise', 'US -ize often becomes UK -ise.'],
+  ['analyze', 'analyse', '-yze → -yse', 'US -yze becomes UK -yse: analyse.'],
+  ['paralyze', 'paralyse', '-yze → -yse', 'US -yze becomes UK -yse: paralyse.'],
+  ['traveling', 'travelling', 'double l', 'British spelling often doubles l before -ing/-ed: travelling, travelled.'],
+  ['traveled', 'travelled', 'double l', 'British spelling often doubles l before -ing/-ed.'],
+  ['canceled', 'cancelled', 'double l', 'UK spelling doubles l: cancelled.'],
+  ['canceling', 'cancelling', 'double l', 'UK spelling doubles l: cancelling.'],
+  ['program', 'programme', 'programme', 'Use programme for TV/radio/event/training programme. Computer program can stay program.'],
+  ['defense', 'defence', '-se → -ce', 'UK spelling often uses -ce for nouns: defence, offence.'],
+  ['offense', 'offence', '-se → -ce', 'UK spelling: offence.'],
+  ['license', 'licence', 'noun form', 'UK noun is licence; verb is license.'],
+  ['practice (verb)', 'practise', 'noun/verb split', 'UK: practice = noun, practise = verb.'],
+  ['gray', 'grey', 'a → e', 'UK spelling is usually grey.'],
+  ['dialog', 'dialogue', '-ogue', 'UK spelling commonly keeps -ogue: dialogue, catalogue.'],
+  ['catalog', 'catalogue', '-ogue', 'UK spelling commonly keeps -ogue: catalogue.']
+];
+
 function renderLearnMode() {
   const n4 = HIGH_VALUE_WORDS.filter(w => LEARN_CARDS[w][3] === 4).length;
   const n5 = HIGH_VALUE_WORDS.filter(w => LEARN_CARDS[w][3] === 5).length;
@@ -1650,6 +1680,7 @@ function renderLearnMode() {
         ${drillButton('brainstorm', '💡', 'Brainstorm Logic',  'definition → word')}
         ${drillButton('mixed',      '🏆', 'Mixed Challenge',   'all techniques', 'border-amber-200 bg-amber-50/60')}
         ${drillButton('speed',      '⚡', 'Speed Recall',      'fast answer training')}
+        ${drillButton('uk',         '🇬🇧', 'US → UK Practice',  'British spelling patterns', 'border-blue-200 bg-blue-50/60')}
         <button onclick="window.b4t.reviewLearnMistakes()" class="premium-card rounded-2xl p-4 text-left">
           <div class="text-3xl mb-2">📌</div>
           <p class="font-display font-bold text-navy-500">Mistake Bank</p>
@@ -1823,11 +1854,13 @@ function startLearnDrill(kind) {
   if (kind === 'pattern' || kind === 'speed') items = PATTERN_DRILLS;
   else if (kind === 'error') items = ERROR_DRILLS;
   else if (kind === 'brainstorm') items = BRAINSTORM_DRILLS;
+  else if (kind === 'uk') items = UK_US_DRILLS;
   else if (kind === 'mixed') {
     items = [
       ...PATTERN_DRILLS.map(x => ['pattern', ...x]),
       ...ERROR_DRILLS.map(x => ['error', ...x]),
       ...BRAINSTORM_DRILLS.map(x => ['brainstorm', ...x]),
+      ...UK_US_DRILLS.map(x => ['uk', ...x]),
     ];
   } else items = PATTERN_DRILLS;
 
@@ -1877,6 +1910,21 @@ function renderLearnDrill() {
         `).join('')}
       </div>
     `;
+  } else if (kind === 'uk') {
+    body = `
+      <p class="text-xs uppercase tracking-wider font-semibold text-navy-500/50 mb-3">US → UK Spelling</p>
+      <p class="text-sm text-navy-500/60 mb-3">Convert this American spelling to the British spelling used in the competition style.</p>
+      <div class="bg-blue-50 border border-blue-100 rounded-2xl p-4 mb-4">
+        <p class="text-[10px] uppercase tracking-wider font-semibold text-blue-700/60 mb-1">US spelling</p>
+        <p class="font-display text-4xl font-bold text-navy-500">${escapeHtml(it[0])}</p>
+      </div>
+      <p class="text-sm text-navy-500/60 mb-4">Pattern clue: <b>${escapeHtml(it[2])}</b></p>
+      <input id="learnAnswer"
+             class="spell-input w-full px-4 py-4 bg-amber-50/40 border-2 border-amber-200 rounded-xl text-xl text-center"
+             autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+             placeholder="Type UK spelling..."
+             aria-label="British spelling answer" autofocus>
+    `;
   } else {
     body = `
       <div class="flex items-center gap-2 mb-4 flex-wrap">
@@ -1896,6 +1944,7 @@ function renderLearnDrill() {
               : kind === 'error'      ? 'Error Instinct'
               : kind === 'brainstorm' ? 'Brainstorm Logic'
               : kind === 'speed'      ? 'Speed Recall'
+              : kind === 'uk'         ? 'US → UK Practice'
               : kind === 'card'       ? 'Quick Quiz'
                                       : 'Mixed Challenge';
 
@@ -1937,13 +1986,15 @@ function submitLearn(choice) {
   if (s.type === 'learn-card') kind = 'card';
 
   const guess = normalizeAnswer(choice || ($('#learnAnswer')?.value || ''));
-  const rawAnswer = (kind === 'pattern' || kind === 'speed' || kind === 'card')
+  const rawAnswer = (kind === 'pattern' || kind === 'speed' || kind === 'card' || kind === 'uk')
     ? it[1]
     : (kind === 'error' ? it[1] : it[3]);
   const answer = normalizeAnswer(rawAnswer);
-  const lesson = (kind === 'pattern' || kind === 'speed' || kind === 'card')
-    ? it[2]
-    : (kind === 'error' ? it[2] : it[4]);
+  const lesson = kind === 'uk'
+    ? `${it[2]} — ${it[3]}`
+    : (kind === 'pattern' || kind === 'speed' || kind === 'card')
+      ? it[2]
+      : (kind === 'error' ? it[2] : it[4]);
 
   const ok = guess === answer;
   if (ok) s.correct++;
