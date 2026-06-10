@@ -660,7 +660,7 @@ export function getTrapsByType(trapType) {
 
 export const TRAP_META = {
   silent:    { icon: '🔇', name: 'Silent letters', color: 'blue' },
-  double:    { icon: '🔁', name: 'Doubling errors', color: 'purple' },
+  double:    { icon: '🔁', name: 'Double letters', color: 'purple' },
   ence_ance: { icon: '🌀', name: '-ence vs -ance', color: 'amber' },
   ie_ei:     { icon: '↔️', name: '-ie / -ei', color: 'pink' },
   greek:     { icon: '🏛', name: 'Greek origin', color: 'indigo' },
@@ -672,7 +672,7 @@ export const TRAP_META = {
 };
 
 export const TIER_META = {
-  1: { name: 'Gold-Level',           description: 'Most-missed by Gold candidates',    color: 'amber'  },
-  2: { name: 'Selection-Level',      description: 'Words that decide Thailand finals', color: 'red'    },
-  3: { name: 'International-Level',  description: 'Japan World Finals candidates',     color: 'purple' },
+  1: { icon: '🥇', name: 'Gold-Level',           description: 'Most-missed by Gold candidates',    color: 'amber'  },
+  2: { icon: '🎯', name: 'Selection-Level',      description: 'Words that decide Thailand finals', color: 'red'    },
+  3: { icon: '🇯🇵', name: 'International-Level',  description: 'Japan World Finals candidates',     color: 'purple' },
 };
