@@ -5,6 +5,8 @@ import { ANAGRAM_WORDS, scramble, pickWeightedAnagrams } from '../data/anagrams.
 import { PASSAGES, pickPassage } from '../data/passages.js';
 import { LISTENING_SCRIPTS, pickListeningScript } from '../data/listening.js';
 import { BRAINSTORM_THEMES, pickTheme, getThemeById } from '../data/themes.js';
+import { ROOTS, CATEGORY_META } from '../data/roots.js';
+import { CHAMPIONSHIP_TRAPS, TRAP_META, TIER_META } from '../data/championship_traps.js';
 import { firebaseConfig, OFFLINE_MODE } from './firebase-config.js';
 
 // ============================================================
@@ -1611,36 +1613,6 @@ const ERROR_DRILLS = HIGH_VALUE_WORDS.filter(w=>LEARN_CARDS[w][5]).map(w=>[LEARN
 const BRAINSTORM_DRILLS = [
   ['WEATHER','B','A severe snow storm with strong winds.','blizzard','Think category: snow/storm/cold/rain/heat.'],['WEATHER','C','Quite cold; sounds like a South American country.','chilly','Sound clue: Chile → chilly.'],['WEATHER','D','Rain in very small drops.','drizzle','Light rain words.'],['WEATHER','F','A sudden light fall of snow blown by wind.','flurry','Snow + wind category.'],['WEATHER','H','A very hot period for days or weeks.','heatwave','Compound: heat + wave.'],['PERSONALITY','A','A person who shows love or liking for someone.','admirer','Person noun: -er.'],['PERSONALITY','M','One day happy, next day sad.','moody','Mood changes → moody.'],['PERSONALITY','F','Can adapt to new situations.','flexible','Meaning first.'],['PERSONALITY','A','Wants to achieve a lot in life.','ambitious','Personality adjective.'],['PERSONALITY','I','Not confident about themself.','insecure','in- means not.'],['COUNTRYSIDE','F','A large area of land with grass or crops.','field','Land/farm category.'],['COUNTRYSIDE','W','Animals and plants of the natural world.','wildlife','wild + life.'],['COUNTRYSIDE','C','A small house in the countryside.','cottage','Double t.'],['COUNTRYSIDE','S','A continuous body of flowing water.','stream','Water category.']
 ];
-
-const UK_US_DRILLS = [
-  ['color', 'colour', '-or → -our', 'Many British spellings add u after o: colour, favourite, behaviour.'],
-  ['favorite', 'favourite', '-or → -our', 'The UK form keeps the u: favourite.'],
-  ['flavor', 'flavour', '-or → -our', 'Food words often use -our in UK spelling: flavour.'],
-  ['neighbor', 'neighbour', '-or → -our', 'UK spelling: neighbour.'],
-  ['behavior', 'behaviour', '-or → -our', 'UK spelling: behaviour.'],
-  ['center', 'centre', '-er → -re', 'Some words reverse -er to -re in UK spelling: centre, theatre.'],
-  ['theater', 'theatre', '-er → -re', 'UK spelling uses -re: theatre.'],
-  ['meter', 'metre', '-er → -re', 'For the unit of length, UK spelling is metre.'],
-  ['liter', 'litre', '-er → -re', 'UK spelling is litre.'],
-  ['organize', 'organise', '-ize → -ise', 'In British-style competition spelling, practise -ise forms.'],
-  ['realize', 'realise', '-ize → -ise', 'US -ize often becomes UK -ise.'],
-  ['recognize', 'recognise', '-ize → -ise', 'US -ize often becomes UK -ise.'],
-  ['analyze', 'analyse', '-yze → -yse', 'US -yze becomes UK -yse: analyse.'],
-  ['paralyze', 'paralyse', '-yze → -yse', 'US -yze becomes UK -yse: paralyse.'],
-  ['traveling', 'travelling', 'double l', 'British spelling often doubles l before -ing/-ed: travelling, travelled.'],
-  ['traveled', 'travelled', 'double l', 'British spelling often doubles l before -ing/-ed.'],
-  ['canceled', 'cancelled', 'double l', 'UK spelling doubles l: cancelled.'],
-  ['canceling', 'cancelling', 'double l', 'UK spelling doubles l: cancelling.'],
-  ['program', 'programme', 'programme', 'Use programme for TV/radio/event/training programme. Computer program can stay program.'],
-  ['defense', 'defence', '-se → -ce', 'UK spelling often uses -ce for nouns: defence, offence.'],
-  ['offense', 'offence', '-se → -ce', 'UK spelling: offence.'],
-  ['license', 'licence', 'noun form', 'UK noun is licence; verb is license.'],
-  ['practice (verb)', 'practise', 'noun/verb split', 'UK: practice = noun, practise = verb.'],
-  ['gray', 'grey', 'a → e', 'UK spelling is usually grey.'],
-  ['dialog', 'dialogue', '-ogue', 'UK spelling commonly keeps -ogue: dialogue, catalogue.'],
-  ['catalog', 'catalogue', '-ogue', 'UK spelling commonly keeps -ogue: catalogue.']
-];
-
 function renderLearnMode() {
   const n4 = HIGH_VALUE_WORDS.filter(w => LEARN_CARDS[w][3] === 4).length;
   const n5 = HIGH_VALUE_WORDS.filter(w => LEARN_CARDS[w][3] === 5).length;
@@ -1678,9 +1650,18 @@ function renderLearnMode() {
         ${drillButton('pattern',    '🧩', 'Pattern Drill',     'suffix, prefix, family')}
         ${drillButton('error',      '🎯', 'Error Instinct',    'choose correct spelling')}
         ${drillButton('brainstorm', '💡', 'Brainstorm Logic',  'definition → word')}
+        <button onclick="window.b4t.renderRootsLab()" class="premium-card rounded-2xl p-4 text-left border-emerald-200 bg-emerald-50/60">
+          <div class="text-3xl mb-2">🌳</div>
+          <p class="font-display font-bold text-navy-500">Roots Lab</p>
+          <p class="text-xs text-navy-500/60">decode unseen words</p>
+        </button>
+        <button onclick="window.b4t.renderTrapsLab()" class="premium-card rounded-2xl p-4 text-left border-amber-200 bg-amber-50/60">
+          <div class="text-3xl mb-2">🏆</div>
+          <p class="font-display font-bold text-navy-500">Championship Traps</p>
+          <p class="text-xs text-navy-500/60">Gold → Selection words</p>
+        </button>
         ${drillButton('mixed',      '🏆', 'Mixed Challenge',   'all techniques', 'border-amber-200 bg-amber-50/60')}
         ${drillButton('speed',      '⚡', 'Speed Recall',      'fast answer training')}
-        ${drillButton('uk',         '🇬🇧', 'US → UK Practice',  'British spelling patterns', 'border-blue-200 bg-blue-50/60')}
         <button onclick="window.b4t.reviewLearnMistakes()" class="premium-card rounded-2xl p-4 text-left">
           <div class="text-3xl mb-2">📌</div>
           <p class="font-display font-bold text-navy-500">Mistake Bank</p>
@@ -1690,7 +1671,7 @@ function renderLearnMode() {
 
       <div class="premium-card rounded-2xl p-4 mb-5">
         <p class="font-display font-bold text-navy-500 text-lg">Coverage</p>
-        <p class="text-sm text-navy-500/70">${HIGH_VALUE_WORDS.length} high-value words · Bee4 ${n4} · Bee5 ${n5} · Bee3 ${n3}</p>
+        <p class="text-sm text-navy-500/70">${HIGH_VALUE_WORDS.length} high-value words · ${ROOTS.length} roots · ${CHAMPIONSHIP_TRAPS.length} trap words</p>
         <p class="text-xs text-navy-500/50 mt-1">Tap LEARN to open a mini lesson and quick quiz.</p>
       </div>
 
@@ -1854,13 +1835,11 @@ function startLearnDrill(kind) {
   if (kind === 'pattern' || kind === 'speed') items = PATTERN_DRILLS;
   else if (kind === 'error') items = ERROR_DRILLS;
   else if (kind === 'brainstorm') items = BRAINSTORM_DRILLS;
-  else if (kind === 'uk') items = UK_US_DRILLS;
   else if (kind === 'mixed') {
     items = [
       ...PATTERN_DRILLS.map(x => ['pattern', ...x]),
       ...ERROR_DRILLS.map(x => ['error', ...x]),
       ...BRAINSTORM_DRILLS.map(x => ['brainstorm', ...x]),
-      ...UK_US_DRILLS.map(x => ['uk', ...x]),
     ];
   } else items = PATTERN_DRILLS;
 
@@ -1910,21 +1889,6 @@ function renderLearnDrill() {
         `).join('')}
       </div>
     `;
-  } else if (kind === 'uk') {
-    body = `
-      <p class="text-xs uppercase tracking-wider font-semibold text-navy-500/50 mb-3">US → UK Spelling</p>
-      <p class="text-sm text-navy-500/60 mb-3">Convert this American spelling to the British spelling used in the competition style.</p>
-      <div class="bg-blue-50 border border-blue-100 rounded-2xl p-4 mb-4">
-        <p class="text-[10px] uppercase tracking-wider font-semibold text-blue-700/60 mb-1">US spelling</p>
-        <p class="font-display text-4xl font-bold text-navy-500">${escapeHtml(it[0])}</p>
-      </div>
-      <p class="text-sm text-navy-500/60 mb-4">Pattern clue: <b>${escapeHtml(it[2])}</b></p>
-      <input id="learnAnswer"
-             class="spell-input w-full px-4 py-4 bg-amber-50/40 border-2 border-amber-200 rounded-xl text-xl text-center"
-             autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
-             placeholder="Type UK spelling..."
-             aria-label="British spelling answer" autofocus>
-    `;
   } else {
     body = `
       <div class="flex items-center gap-2 mb-4 flex-wrap">
@@ -1944,7 +1908,6 @@ function renderLearnDrill() {
               : kind === 'error'      ? 'Error Instinct'
               : kind === 'brainstorm' ? 'Brainstorm Logic'
               : kind === 'speed'      ? 'Speed Recall'
-              : kind === 'uk'         ? 'US → UK Practice'
               : kind === 'card'       ? 'Quick Quiz'
                                       : 'Mixed Challenge';
 
@@ -1986,15 +1949,13 @@ function submitLearn(choice) {
   if (s.type === 'learn-card') kind = 'card';
 
   const guess = normalizeAnswer(choice || ($('#learnAnswer')?.value || ''));
-  const rawAnswer = (kind === 'pattern' || kind === 'speed' || kind === 'card' || kind === 'uk')
+  const rawAnswer = (kind === 'pattern' || kind === 'speed' || kind === 'card')
     ? it[1]
     : (kind === 'error' ? it[1] : it[3]);
   const answer = normalizeAnswer(rawAnswer);
-  const lesson = kind === 'uk'
-    ? `${it[2]} — ${it[3]}`
-    : (kind === 'pattern' || kind === 'speed' || kind === 'card')
-      ? it[2]
-      : (kind === 'error' ? it[2] : it[4]);
+  const lesson = (kind === 'pattern' || kind === 'speed' || kind === 'card')
+    ? it[2]
+    : (kind === 'error' ? it[2] : it[4]);
 
   const ok = guess === answer;
   if (ok) s.correct++;
@@ -2108,6 +2069,340 @@ function learnMiniCard(word) {
 }
 
 
+
+// ============================================================
+// SELECTION ROUND: ROOTS LAB + CHAMPIONSHIP TRAPS
+// ============================================================
+function rootOriginLabel(origin) {
+  return origin === 'GR' ? 'Greek' : origin === 'LA' ? 'Latin' : origin;
+}
+
+function renderRootsLab(category = 'all') {
+  const roots = category === 'all' ? ROOTS : ROOTS.filter(r => r.category === category);
+  const cats = Object.keys(CATEGORY_META || {});
+  app().innerHTML = `
+    <div class="screen has-nav animate-fade-in"><div class="screen-scroll px-5 pt-8 pb-28"><div class="max-w-2xl mx-auto">
+      <div class="flex items-center gap-3 mb-5">
+        <button onclick="showScreen('learn')" class="bg-amber-100 hover:bg-amber-200 active:bg-amber-300 text-amber-800 font-bold rounded-full px-4 py-2 flex items-center gap-1.5 transition shadow-sm border border-amber-300" aria-label="Back to Learn Mode">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
+          <span class="text-sm">Back</span>
+        </button>
+        <div>
+          <p class="text-xs font-semibold text-navy-500/50 tracking-wider uppercase">Selection Round Prep</p>
+          <h1 class="font-display text-3xl font-bold text-navy-500">🌳 Roots Lab</h1>
+        </div>
+      </div>
+
+      <div class="hero-gradient diagonal-pattern text-white rounded-3xl p-6 mb-5">
+        <p class="font-display text-3xl font-bold leading-tight">Decode words you have never seen.</p>
+        <p class="text-sm opacity-85 mt-3">${ROOTS.length} Greek/Latin roots · ${ROOTS.reduce((n,r)=>n+(r.examples?.length||0),0)} example words</p>
+      </div>
+
+      <button onclick="window.b4t.startRootDrill('${category}')" class="btn-primary w-full py-4 rounded-xl font-bold mb-4">Start Roots Drill</button>
+
+      <div class="flex gap-2 overflow-x-auto pb-3 mb-3 -mx-1 px-1">
+        <button onclick="window.b4t.renderRootsLab('all')" class="${category==='all'?'bg-navy-500 text-white border-navy-500':'bg-white border-navy-100 text-navy-500'} border px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap">All ${ROOTS.length}</button>
+        ${cats.map(c => {
+          const meta = CATEGORY_META[c] || {icon:'•', name:c};
+          const count = ROOTS.filter(r => r.category === c).length;
+          return `<button onclick="window.b4t.renderRootsLab('${c}')" class="${category===c?'bg-navy-500 text-white border-navy-500':'bg-white border-navy-100 text-navy-500'} border px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap">${meta.icon} ${meta.name} ${count}</button>`;
+        }).join('')}
+      </div>
+
+      <div class="space-y-3">
+        ${roots.map(renderRootCard).join('')}
+      </div>
+    </div></div></div>
+  `;
+}
+
+function renderRootCard(r) {
+  const meta = CATEGORY_META[r.category] || { icon: '🌳', name: r.category };
+  return `
+    <div class="premium-card rounded-2xl p-4">
+      <div class="flex items-start justify-between gap-3">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 flex-wrap mb-1">
+            <p class="font-display text-2xl font-bold text-navy-500">${escapeHtml(r.root)}</p>
+            <span class="bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full">${rootOriginLabel(r.origin)}</span>
+            <span class="bg-navy-50 border border-navy-100 text-navy-500 text-[10px] font-bold px-2 py-0.5 rounded-full">${meta.icon} ${escapeHtml(meta.name)}</span>
+          </div>
+          <p class="text-sm text-navy-500/80"><b>Meaning:</b> ${escapeHtml(r.meaning)}</p>
+          <p class="text-xs text-navy-500/55 mt-1">${escapeHtml(r.hint || '')}</p>
+        </div>
+        <button onclick="window.b4t.openRootCard('${escapeHtml(r.root)}')" class="bg-amber-100 hover:bg-amber-200 active:bg-amber-300 text-amber-800 font-bold text-xs uppercase tracking-wider px-3 py-2 rounded-full border border-amber-300 transition shadow-sm flex-shrink-0">Learn</button>
+      </div>
+      <div class="flex gap-1.5 flex-wrap mt-3">
+        ${(r.examples || []).slice(0, 6).map(x => `<span class="font-mono text-[11px] bg-cream border border-navy-100 text-navy-500/75 rounded-full px-2 py-1">${escapeHtml(x)}</span>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function openRootCard(root) {
+  const r = ROOTS.find(x => x.root === root);
+  if (!r) return;
+  const meta = CATEGORY_META[r.category] || { icon: '🌳', name: r.category };
+  app().innerHTML = `
+    <div class="screen animate-fade-in"><div class="screen-scroll flex flex-col"><div class="max-w-2xl mx-auto w-full flex flex-col flex-1 px-5 pt-8 pb-6">
+      <button onclick="window.b4t.renderRootsLab('${r.category}')" class="mb-5 bg-amber-100 hover:bg-amber-200 active:bg-amber-300 text-amber-800 font-bold rounded-full px-4 py-2 inline-flex items-center gap-1.5 transition shadow-sm border border-amber-300">← Back</button>
+      <div class="hero-gradient diagonal-pattern text-white rounded-3xl p-6 mb-4">
+        <p class="text-xs uppercase tracking-wider opacity-70 mb-2">${meta.icon} ${escapeHtml(meta.name)} · ${rootOriginLabel(r.origin)}</p>
+        <p class="font-display text-5xl font-bold">${escapeHtml(r.root)}</p>
+        <p class="font-display text-2xl font-bold mt-3">${escapeHtml(r.meaning)}</p>
+      </div>
+      <div class="premium-card rounded-3xl p-5 mb-4 space-y-4">
+        <p class="bg-emerald-50 rounded-xl p-4 text-navy-500"><b>Memory hint:</b> ${escapeHtml(r.hint || '')}</p>
+        <div>
+          <p class="text-xs uppercase tracking-wider font-semibold text-navy-500/50 mb-2">Example words</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            ${(r.examples || []).map(x => `<div class="bg-cream rounded-xl p-3 font-mono text-navy-500">${escapeHtml(x)}</div>`).join('')}
+          </div>
+        </div>
+      </div>
+      <button onclick="window.b4t.startRootDrill('${r.category}')" class="btn-primary w-full py-4 rounded-xl font-bold mt-auto">Practice this category</button>
+    </div></div></div>
+  `;
+}
+
+function startRootDrill(category = 'all') {
+  const pool = (category === 'all' ? ROOTS : ROOTS.filter(r => r.category === category)).filter(r => r.examples && r.examples.length);
+  const items = shuffleArray(pool).slice(0, 8).map(r => {
+    const mode = Math.random() < 0.5 ? 'meaning' : 'word';
+    const example = r.examples[Math.floor(Math.random() * r.examples.length)];
+    return { mode, root: r.root, meaning: r.meaning, hint: r.hint, example, category: r.category };
+  });
+  state.session = { type: 'root-drill', items, index: 0, correct: 0, category };
+  renderRootDrill();
+}
+
+function renderRootDrill() {
+  const s = state.session;
+  if (!s || s.type !== 'root-drill') return;
+  if (s.index >= s.items.length) return renderSelectionDrillEnd('Roots Lab', () => `window.b4t.renderRootsLab('${s.category || 'all'}')`);
+  const it = s.items[s.index];
+  const question = it.mode === 'meaning'
+    ? `What does the root “${it.root}” mean?`
+    : `Which root helps build the word “${it.example}”?`;
+  const answer = it.mode === 'meaning' ? it.meaning : it.root;
+  app().innerHTML = `
+    <div class="screen animate-fade-in"><div class="screen-scroll flex flex-col"><div class="max-w-2xl mx-auto w-full flex flex-col flex-1 px-5 pt-8 pb-6">
+      <div class="flex items-center gap-3 mb-6">
+        <button onclick="window.b4t.renderRootsLab('${s.category || 'all'}')" class="bg-amber-100 hover:bg-amber-200 active:bg-amber-300 text-amber-800 font-bold rounded-full px-4 py-2 flex items-center gap-1.5 transition shadow-sm border border-amber-300">Back</button>
+        <div><p class="text-xs tracking-wider uppercase font-semibold text-navy-500/50">Roots Drill · ${s.index + 1}/${s.items.length}</p><h1 class="font-display text-3xl font-bold text-navy-500">Decode the root</h1></div>
+      </div>
+      <div class="premium-card rounded-3xl p-6 mb-4">
+        <p class="text-lg text-navy-500 mb-4">${escapeHtml(question)}</p>
+        <input id="rootAnswer" data-answer="${escapeHtml(answer)}" class="spell-input w-full px-4 py-4 bg-emerald-50/50 border-2 border-emerald-200 rounded-xl text-xl text-center" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" autofocus>
+        <p class="text-xs text-navy-500/55 mt-3">Hint: ${escapeHtml(it.hint || 'Think of related words.')}</p>
+      </div>
+      <button onclick="window.b4t.submitRootDrill()" class="btn-primary w-full py-4 rounded-xl font-bold mt-auto">Check</button>
+    </div></div></div>
+  `;
+  $('#rootAnswer')?.addEventListener('keydown', e => { if (e.key === 'Enter') window.b4t.submitRootDrill(); });
+}
+
+function submitRootDrill() {
+  const s = state.session;
+  const it = s.items[s.index];
+  const guess = ($('#rootAnswer')?.value || '').trim().toLowerCase();
+  const answer = it.mode === 'meaning' ? it.meaning : it.root;
+  const ok = it.mode === 'meaning'
+    ? answer.toLowerCase().split(',').some(part => guess.includes(part.trim()) || part.trim().includes(guess))
+    : guess === answer.toLowerCase();
+  if (ok) s.correct++;
+  app().innerHTML = `
+    <div class="screen animate-fade-in"><div class="screen-scroll flex flex-col"><div class="max-w-2xl mx-auto w-full flex flex-col flex-1 px-5 pt-10 pb-6">
+      <div class="text-center mb-6"><div class="text-6xl mb-3">${ok ? '✅' : '🌳'}</div><p class="font-display text-3xl font-bold text-navy-500">${ok ? 'Correct!' : 'Root pattern'}</p></div>
+      <div class="premium-card rounded-3xl p-6 mb-4">
+        <p class="text-xs uppercase tracking-wider font-semibold text-navy-500/50 mb-2">Root</p>
+        <p class="font-display text-4xl font-bold text-navy-500 mb-2">${escapeHtml(it.root)}</p>
+        <p class="bg-emerald-50 rounded-xl p-4 text-navy-500"><b>Meaning:</b> ${escapeHtml(it.meaning)}</p>
+        <p class="text-sm text-navy-500/60 mt-3"><b>Example:</b> ${escapeHtml(it.example)}</p>
+      </div>
+      <button onclick="window.b4t.nextRootDrill()" class="btn-primary w-full py-4 rounded-xl font-bold mt-auto">Continue</button>
+    </div></div></div>
+  `;
+}
+
+function nextRootDrill() {
+  state.session.index++;
+  renderRootDrill();
+}
+
+function renderTrapsLab(tier = 'all', trap = 'all') {
+  let traps = CHAMPIONSHIP_TRAPS;
+  if (tier !== 'all') traps = traps.filter(t => String(t.tier) === String(tier));
+  if (trap !== 'all') traps = traps.filter(t => (t.traps || []).includes(trap));
+  const trapKeys = Object.keys(TRAP_META || {});
+  app().innerHTML = `
+    <div class="screen has-nav animate-fade-in"><div class="screen-scroll px-5 pt-8 pb-28"><div class="max-w-2xl mx-auto">
+      <div class="flex items-center gap-3 mb-5">
+        <button onclick="showScreen('learn')" class="bg-amber-100 hover:bg-amber-200 active:bg-amber-300 text-amber-800 font-bold rounded-full px-4 py-2 flex items-center gap-1.5 transition shadow-sm border border-amber-300">Back</button>
+        <div><p class="text-xs font-semibold text-navy-500/50 tracking-wider uppercase">Selection Round Prep</p><h1 class="font-display text-3xl font-bold text-navy-500">🏆 Championship Traps</h1></div>
+      </div>
+      <div class="hero-gradient diagonal-pattern text-white rounded-3xl p-6 mb-5">
+        <p class="font-display text-3xl font-bold leading-tight">Words Gold winners still miss.</p>
+        <p class="text-sm opacity-85 mt-3">${CHAMPIONSHIP_TRAPS.length} trap words · 3 tiers · targeted tags</p>
+      </div>
+      <button onclick="window.b4t.startTrapDrill('${tier}', '${trap}')" class="btn-primary w-full py-4 rounded-xl font-bold mb-4">Start Trap Drill</button>
+      <p class="text-xs uppercase tracking-wider font-semibold text-navy-500/50 mb-2">Tier</p>
+      <div class="flex gap-2 overflow-x-auto pb-3 mb-3 -mx-1 px-1">
+        <button onclick="window.b4t.renderTrapsLab('all','${trap}')" class="${tier==='all'?'bg-navy-500 text-white border-navy-500':'bg-white border-navy-100 text-navy-500'} border px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap">All ${CHAMPIONSHIP_TRAPS.length}</button>
+        ${[1,2,3].map(k => {
+          const meta = TIER_META[k] || {icon:'•', name:'Tier '+k};
+          const count = CHAMPIONSHIP_TRAPS.filter(t => t.tier === k).length;
+          return `<button onclick="window.b4t.renderTrapsLab('${k}','${trap}')" class="${String(tier)===String(k)?'bg-navy-500 text-white border-navy-500':'bg-white border-navy-100 text-navy-500'} border px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap">${meta.icon} ${meta.name} ${count}</button>`;
+        }).join('')}
+      </div>
+      <p class="text-xs uppercase tracking-wider font-semibold text-navy-500/50 mb-2">Trap type</p>
+      <div class="flex gap-2 overflow-x-auto pb-3 mb-3 -mx-1 px-1">
+        <button onclick="window.b4t.renderTrapsLab('${tier}','all')" class="${trap==='all'?'bg-navy-500 text-white border-navy-500':'bg-white border-navy-100 text-navy-500'} border px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap">All types</button>
+        ${trapKeys.map(k => {
+          const meta = TRAP_META[k] || {icon:'•', name:k};
+          const count = CHAMPIONSHIP_TRAPS.filter(t => (t.traps || []).includes(k)).length;
+          return `<button onclick="window.b4t.renderTrapsLab('${tier}','${k}')" class="${trap===k?'bg-navy-500 text-white border-navy-500':'bg-white border-navy-100 text-navy-500'} border px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap">${meta.icon} ${meta.name} ${count}</button>`;
+        }).join('')}
+      </div>
+      <p class="text-xs text-navy-500/50 mb-3">Showing ${traps.length} word${traps.length===1?'':'s'}</p>
+      <div class="space-y-3">${traps.slice(0, 80).map(renderTrapCard).join('')}</div>
+      ${traps.length > 80 ? `<p class="text-center text-xs text-navy-500/45 mt-4">Showing first 80. Use filters to narrow practice.</p>` : ''}
+    </div></div></div>
+  `;
+}
+
+function renderTrapCard(t) {
+  const tierMeta = TIER_META[t.tier] || { icon: '🏆', name: 'Tier ' + t.tier };
+  return `
+    <div class="premium-card rounded-2xl p-4">
+      <div class="flex items-start justify-between gap-3">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 flex-wrap mb-1">
+            <p class="font-display text-2xl font-bold text-navy-500">${escapeHtml(t.word)}</p>
+            <span class="bg-amber-50 border border-amber-200 text-amber-700 text-[10px] font-bold px-2 py-0.5 rounded-full">${tierMeta.icon} ${escapeHtml(tierMeta.name)}</span>
+          </div>
+          <p class="text-sm text-navy-500/80">${escapeHtml(t.tip || '')}</p>
+        </div>
+        <button onclick="window.b4t.openTrapCard('${escapeHtml(t.word)}')" class="bg-amber-100 hover:bg-amber-200 active:bg-amber-300 text-amber-800 font-bold text-xs uppercase tracking-wider px-3 py-2 rounded-full border border-amber-300 transition shadow-sm flex-shrink-0">Learn</button>
+      </div>
+      <div class="flex gap-1.5 flex-wrap mt-3">
+        ${(t.traps || []).map(tag => {
+          const meta = TRAP_META[tag] || {icon:'•', name:tag};
+          return `<span class="text-[11px] bg-red-50 border border-red-100 text-red-700 rounded-full px-2 py-1">${meta.icon} ${escapeHtml(meta.name)}</span>`;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function openTrapCard(word) {
+  const t = CHAMPIONSHIP_TRAPS.find(x => x.word === word);
+  if (!t) return;
+  const tierMeta = TIER_META[t.tier] || { icon: '🏆', name: 'Tier ' + t.tier };
+  app().innerHTML = `
+    <div class="screen animate-fade-in"><div class="screen-scroll flex flex-col"><div class="max-w-2xl mx-auto w-full flex flex-col flex-1 px-5 pt-8 pb-6">
+      <button onclick="window.b4t.renderTrapsLab('${t.tier}','all')" class="mb-5 bg-amber-100 hover:bg-amber-200 active:bg-amber-300 text-amber-800 font-bold rounded-full px-4 py-2 inline-flex items-center gap-1.5 transition shadow-sm border border-amber-300">← Back</button>
+      <div class="hero-gradient diagonal-pattern text-white rounded-3xl p-6 mb-4">
+        <p class="text-xs uppercase tracking-wider opacity-70 mb-2">${tierMeta.icon} ${escapeHtml(tierMeta.name)}</p>
+        <div class="flex items-center gap-3 flex-wrap">
+          <p class="font-display text-5xl font-bold">${escapeHtml(t.word)}</p>
+          <button onclick="window.b4t.speakLearnWord('${escapeHtml(t.word)}')" class="bg-white/15 hover:bg-white/25 text-white rounded-full px-4 py-2 text-sm font-bold">🔊 Listen</button>
+        </div>
+      </div>
+      <div class="premium-card rounded-3xl p-5 mb-4 space-y-4">
+        <p class="bg-amber-50 rounded-xl p-4 text-navy-500"><b>Trap tip:</b> ${escapeHtml(t.tip || '')}</p>
+        <div>
+          <p class="text-xs uppercase tracking-wider font-semibold text-navy-500/50 mb-2">Common misspellings</p>
+          <div class="flex gap-2 flex-wrap">${(t.common_misspellings || []).map(x => `<span class="font-mono text-red-700 line-through bg-red-50 border border-red-100 rounded-full px-3 py-1">${escapeHtml(x)}</span>`).join('')}</div>
+        </div>
+        <div class="flex gap-1.5 flex-wrap">
+          ${(t.traps || []).map(tag => {
+            const meta = TRAP_META[tag] || {icon:'•', name:tag};
+            return `<span class="text-[11px] bg-red-50 border border-red-100 text-red-700 rounded-full px-2 py-1">${meta.icon} ${escapeHtml(meta.name)}</span>`;
+          }).join('')}
+        </div>
+      </div>
+      <button onclick="window.b4t.startTrapDrill('${t.tier}', '${(t.traps && t.traps[0]) || 'all'}')" class="btn-primary w-full py-4 rounded-xl font-bold mt-auto">Practice similar traps</button>
+    </div></div></div>
+  `;
+}
+
+function startTrapDrill(tier = 'all', trap = 'all') {
+  let pool = CHAMPIONSHIP_TRAPS.filter(t => (t.common_misspellings || []).length);
+  if (tier !== 'all') pool = pool.filter(t => String(t.tier) === String(tier));
+  if (trap !== 'all') pool = pool.filter(t => (t.traps || []).includes(trap));
+  const items = shuffleArray(pool).slice(0, 8);
+  state.session = { type: 'trap-drill', items, index: 0, correct: 0, tier, trap };
+  renderTrapDrill();
+}
+
+function renderTrapDrill() {
+  const s = state.session;
+  if (!s || s.type !== 'trap-drill') return;
+  if (s.index >= s.items.length) return renderSelectionDrillEnd('Championship Traps', () => `window.b4t.renderTrapsLab('${s.tier || 'all'}','${s.trap || 'all'}')`);
+  const t = s.items[s.index];
+  const choices = shuffleArray([t.word, ...(t.common_misspellings || [])]).slice(0, 4);
+  app().innerHTML = `
+    <div class="screen animate-fade-in"><div class="screen-scroll flex flex-col"><div class="max-w-2xl mx-auto w-full flex flex-col flex-1 px-5 pt-8 pb-6">
+      <div class="flex items-center gap-3 mb-6">
+        <button onclick="window.b4t.renderTrapsLab('${s.tier || 'all'}','${s.trap || 'all'}')" class="bg-amber-100 hover:bg-amber-200 active:bg-amber-300 text-amber-800 font-bold rounded-full px-4 py-2 flex items-center gap-1.5 transition shadow-sm border border-amber-300">Back</button>
+        <div><p class="text-xs tracking-wider uppercase font-semibold text-navy-500/50">Trap Drill · ${s.index + 1}/${s.items.length}</p><h1 class="font-display text-3xl font-bold text-navy-500">Choose correct spelling</h1></div>
+      </div>
+      <div class="premium-card rounded-3xl p-6 mb-4">
+        <p class="text-sm text-navy-500/60 mb-4">${escapeHtml(t.tip || 'Look carefully at the trap.')}</p>
+        <div class="grid gap-3">
+          ${choices.map(x => `<button onclick="window.b4t.submitTrapDrill('${escapeHtml(x)}')" class="btn-secondary py-4 rounded-xl font-mono text-lg font-bold">${escapeHtml(x)}</button>`).join('')}
+        </div>
+      </div>
+    </div></div></div>
+  `;
+}
+
+function submitTrapDrill(choice) {
+  const s = state.session;
+  const t = s.items[s.index];
+  const ok = normalizeAnswer(choice) === normalizeAnswer(t.word);
+  if (ok) s.correct++;
+  else logLearnMistake(t.word);
+  app().innerHTML = `
+    <div class="screen animate-fade-in"><div class="screen-scroll flex flex-col"><div class="max-w-2xl mx-auto w-full flex flex-col flex-1 px-5 pt-10 pb-6">
+      <div class="text-center mb-6"><div class="text-6xl mb-3">${ok ? '✅' : '🎯'}</div><p class="font-display text-3xl font-bold text-navy-500">${ok ? 'Correct!' : 'Trap word'}</p></div>
+      <div class="premium-card rounded-3xl p-6 mb-4">
+        <p class="text-xs uppercase tracking-wider font-semibold text-navy-500/50 mb-2">Answer</p>
+        <div class="flex items-center gap-3 flex-wrap mb-3">
+          <p class="font-display text-4xl font-bold text-navy-500">${escapeHtml(t.word)}</p>
+          <button onclick="window.b4t.speakLearnWord('${escapeHtml(t.word)}')" class="bg-navy-50 hover:bg-navy-100 text-navy-500 rounded-full px-4 py-2 text-sm font-bold">🔊 Listen</button>
+        </div>
+        ${!ok ? `<p class="text-sm text-red-600 mb-3">Your answer: ${escapeHtml(choice || '(blank)')}</p>` : ''}
+        <p class="bg-amber-50 rounded-xl p-4 text-navy-500"><b>Technique:</b> ${escapeHtml(t.tip || '')}</p>
+        <div class="mt-3 flex gap-2 flex-wrap">${(t.common_misspellings || []).map(x => `<span class="font-mono text-red-700 line-through bg-red-50 border border-red-100 rounded-full px-3 py-1">${escapeHtml(x)}</span>`).join('')}</div>
+      </div>
+      <button onclick="window.b4t.nextTrapDrill()" class="btn-primary w-full py-4 rounded-xl font-bold mt-auto">Continue</button>
+    </div></div></div>
+  `;
+}
+
+function nextTrapDrill() {
+  state.session.index++;
+  renderTrapDrill();
+}
+
+function renderSelectionDrillEnd(title, backActionFactory) {
+  const s = state.session;
+  const backAction = backActionFactory ? backActionFactory() : "showScreen('learn')";
+  app().innerHTML = `
+    <div class="screen animate-fade-in"><div class="screen-scroll flex flex-col"><div class="max-w-2xl mx-auto w-full flex flex-col flex-1 px-5 pt-10 pb-6">
+      <div class="text-center mb-6">
+        <p class="text-xs tracking-wider uppercase font-semibold text-navy-500/50 mb-1">${escapeHtml(title)} Result</p>
+        <p class="font-display text-7xl font-bold text-navy-500 num-badge">${s.correct}<span class="text-3xl text-navy-500/50">/${s.items.length}</span></p>
+        <p class="font-display italic text-lg text-navy-500/70 mt-2">${scoreLabelLearn(s.correct / s.items.length)}</p>
+      </div>
+      <div class="premium-card rounded-2xl p-4 mb-4"><p class="font-bold text-navy-500 mb-2">Next best step</p><p class="text-sm text-navy-500/70">Repeat the same filter until score is 80%+.</p></div>
+      <button onclick="${backAction}" class="btn-primary w-full py-4 rounded-xl font-bold mt-auto">Back</button>
+    </div></div></div>
+  `;
+}
+
 // ============================================================
 // PUBLIC API
 // ============================================================
@@ -2115,6 +2410,16 @@ Object.assign(window.b4t, {
   speakLearnWord,
   startLearnDrill,
   reviewLearnMistakes,
+  renderRootsLab,
+  openRootCard,
+  startRootDrill,
+  submitRootDrill,
+  nextRootDrill,
+  renderTrapsLab,
+  openTrapCard,
+  startTrapDrill,
+  submitTrapDrill,
+  nextTrapDrill,
   submitLearn,
   nextLearn,
   openLearnCard,
