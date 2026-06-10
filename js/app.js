@@ -1650,17 +1650,19 @@ function renderLearnMode() {
         ${drillButton('pattern',    '🧩', 'Pattern Drill',     'suffix, prefix, family')}
         ${drillButton('error',      '🎯', 'Error Instinct',    'choose correct spelling')}
         ${drillButton('brainstorm', '💡', 'Brainstorm Logic',  'definition → word')}
-        <button onclick="window.b4t.renderRootsLab()" class="premium-card rounded-2xl p-4 text-left border-emerald-200 bg-emerald-50/60">
-          <div class="text-3xl mb-2">🌳</div>
+        <button onclick="window.b4t.renderRootsLab()" class="premium-card rounded-2xl p-4 text-left relative overflow-hidden border-2 border-emerald-300 bg-emerald-50/80 shadow-md">
+          <span class="absolute top-3 right-3 bg-emerald-600 text-white text-[10px] font-black tracking-wider px-2 py-1 rounded-full">NEW</span>
+          <div class="text-4xl mb-2">🧬</div>
           <p class="font-display font-bold text-navy-500">Roots Lab</p>
-          <p class="text-xs text-navy-500/60">decode unseen words</p>
+          <p class="text-xs text-navy-500/60">Greek / Latin word roots</p>
         </button>
-        <button onclick="window.b4t.renderTrapsLab()" class="premium-card rounded-2xl p-4 text-left border-amber-200 bg-amber-50/60">
-          <div class="text-3xl mb-2">🏆</div>
+        <button onclick="window.b4t.renderTrapsLab()" class="premium-card rounded-2xl p-4 text-left relative overflow-hidden border-2 border-rose-300 bg-rose-50/80 shadow-md">
+          <span class="absolute top-3 right-3 bg-rose-600 text-white text-[10px] font-black tracking-wider px-2 py-1 rounded-full">SELECTION</span>
+          <div class="text-4xl mb-2">🛡️</div>
           <p class="font-display font-bold text-navy-500">Championship Traps</p>
-          <p class="text-xs text-navy-500/60">Gold → Selection words</p>
+          <p class="text-xs text-navy-500/60">196 Gold → Selection trap words</p>
         </button>
-        ${drillButton('mixed',      '🏆', 'Mixed Challenge',   'all techniques', 'border-amber-200 bg-amber-50/60')}
+        ${drillButton('mixed',      '🧪', 'Mixed Challenge',   'all techniques', 'border-amber-200 bg-amber-50/60')}
         ${drillButton('speed',      '⚡', 'Speed Recall',      'fast answer training')}
         <button onclick="window.b4t.reviewLearnMistakes()" class="premium-card rounded-2xl p-4 text-left">
           <div class="text-3xl mb-2">📌</div>
@@ -2239,7 +2241,7 @@ function renderTrapsLab(tier = 'all', trap = 'all') {
     <div class="screen has-nav animate-fade-in"><div class="screen-scroll px-5 pt-8 pb-28"><div class="max-w-2xl mx-auto">
       <div class="flex items-center gap-3 mb-5">
         <button onclick="showScreen('learn')" class="bg-amber-100 hover:bg-amber-200 active:bg-amber-300 text-amber-800 font-bold rounded-full px-4 py-2 flex items-center gap-1.5 transition shadow-sm border border-amber-300">Back</button>
-        <div><p class="text-xs font-semibold text-navy-500/50 tracking-wider uppercase">Selection Round Prep</p><h1 class="font-display text-3xl font-bold text-navy-500">🏆 Championship Traps</h1></div>
+        <div><p class="text-xs font-semibold text-navy-500/50 tracking-wider uppercase">Selection Round Prep</p><h1 class="font-display text-3xl font-bold text-navy-500">🛡️ Championship Traps</h1></div>
       </div>
       <div class="hero-gradient diagonal-pattern text-white rounded-3xl p-6 mb-5">
         <p class="font-display text-3xl font-bold leading-tight">Words Gold winners still miss.</p>
