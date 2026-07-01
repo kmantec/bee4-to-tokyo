@@ -7,6 +7,7 @@ import { LISTENING_SCRIPTS, pickListeningScript } from '../data/listening.js';
 import { BRAINSTORM_THEMES, pickTheme, getThemeById } from '../data/themes.js';
 import { ROOTS, CATEGORY_META } from '../data/roots.js';
 import { CHAMPIONSHIP_TRAPS, TRAP_META, TIER_META } from '../data/championship_traps.js';
+import { SEMIFINAL_WORDS, SEMIFINAL_SET_META, SEMIFINAL_TAG_META, getSemiFinalWords, createSemiFinalDistractors } from '../data/semifinal_words.js';
 import { firebaseConfig, OFFLINE_MODE } from './firebase-config.js';
 
 // ============================================================
@@ -1650,6 +1651,12 @@ function renderLearnMode() {
         ${drillButton('pattern',    '🧩', 'Pattern Drill',     'suffix, prefix, family')}
         ${drillButton('error',      '🎯', 'Error Instinct',    'choose correct spelling')}
         ${drillButton('brainstorm', '💡', 'Brainstorm Logic',  'definition → word')}
+        <button onclick="window.b4t.renderSemiFinalLab()" class="premium-card rounded-2xl p-4 text-left relative overflow-hidden border-2 border-sky-300 bg-sky-50/80 shadow-md">
+          <span class="absolute top-3 right-3 bg-sky-600 text-white text-[10px] font-black tracking-wider px-2 py-1 rounded-full">NEW</span>
+          <div class="text-4xl mb-2">🎙️</div>
+          <p class="font-display font-bold text-navy-500">Semi-final Prep</p>
+          <p class="text-xs text-navy-500/60">2024/2022 oral word bank</p>
+        </button>
         <button onclick="window.b4t.renderRootsLab()" class="premium-card rounded-2xl p-4 text-left relative overflow-hidden border-2 border-emerald-300 bg-emerald-50/80 shadow-md">
           <span class="absolute top-3 right-3 bg-emerald-600 text-white text-[10px] font-black tracking-wider px-2 py-1 rounded-full">NEW</span>
           <div class="text-4xl mb-2">🧬</div>
@@ -1673,7 +1680,7 @@ function renderLearnMode() {
 
       <div class="premium-card rounded-2xl p-4 mb-5">
         <p class="font-display font-bold text-navy-500 text-lg">Coverage</p>
-        <p class="text-sm text-navy-500/70">${HIGH_VALUE_WORDS.length} high-value words · ${ROOTS.length} roots · ${CHAMPIONSHIP_TRAPS.length} trap words</p>
+        <p class="text-sm text-navy-500/70">${HIGH_VALUE_WORDS.length} high-value words · ${ROOTS.length} roots · ${CHAMPIONSHIP_TRAPS.length} trap words · ${SEMIFINAL_WORDS.length} semi-final words</p>
         <p class="text-xs text-navy-500/50 mt-1">Tap LEARN to open a mini lesson and quick quiz.</p>
       </div>
 
@@ -2072,6 +2079,152 @@ function learnMiniCard(word) {
 
 
 
+
+// ============================================================
+// SEMI-FINAL PREP: REAL ORAL ROUND WORD BANK
+// ============================================================
+function renderSemiFinalLab(setId = '2024-L4', tag = 'all') {
+  const words = getSemiFinalWords(setId, tag);
+  const activeMeta = SEMIFINAL_SET_META[setId] || { title: 'All Sets', label: 'All', icon: '🎙️' };
+  const tagKeys = Object.keys(SEMIFINAL_TAG_META).filter(k => getSemiFinalWords(setId, k).length > 0);
+  app().innerHTML = `
+    <div class="screen has-nav animate-fade-in"><div class="screen-scroll px-5 pt-8 pb-28"><div class="max-w-2xl mx-auto">
+      <div class="flex items-center gap-3 mb-5">
+        <button onclick="showScreen('learn')" class="bg-amber-100 hover:bg-amber-200 active:bg-amber-300 text-amber-800 font-bold rounded-full px-4 py-2 flex items-center gap-1.5 transition shadow-sm border border-amber-300">Back</button>
+        <div><p class="text-xs font-semibold text-navy-500/50 tracking-wider uppercase">Oral Round Word Bank</p><h1 class="font-display text-3xl font-bold text-navy-500">🎙️ Semi-final Prep</h1></div>
+      </div>
+      <div class="hero-gradient diagonal-pattern text-white rounded-3xl p-6 mb-4">
+        <p class="font-display text-3xl font-bold leading-tight">Real semi-final words.</p>
+        <p class="text-sm opacity-85 mt-2">Core: 2024 Level 4 · Stretch: 2024 Level 5 · Challenge: Level 6</p>
+      </div>
+      <button onclick="window.b4t.startSemiFinalDrill('${setId}', '${tag}')" class="btn-primary w-full py-4 rounded-xl font-bold mb-4">Start Mastery Drill</button>
+      <p class="text-xs uppercase tracking-wider font-semibold text-navy-500/50 mb-2">Set</p>
+      <div class="flex gap-2 overflow-x-auto pb-3 mb-4 -mx-1 px-1">
+        ${Object.entries(SEMIFINAL_SET_META).map(([id, m]) => {
+          const count = getSemiFinalWords(id, 'all').length;
+          return `<button onclick="window.b4t.renderSemiFinalLab('${id}','all')" class="filter-pill px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition ${id === setId ? 'bg-navy-500 text-white border-navy-500' : 'bg-white border-navy-100 text-navy-500 hover:bg-blue-50'}">${m.icon} ${m.title} · ${m.label} ${count}</button>`;
+        }).join('')}
+      </div>
+      <p class="text-xs uppercase tracking-wider font-semibold text-navy-500/50 mb-2">Focus tag</p>
+      <div class="flex gap-2 overflow-x-auto pb-3 mb-4 -mx-1 px-1">
+        <button onclick="window.b4t.renderSemiFinalLab('${setId}','all')" class="filter-pill px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition ${tag === 'all' ? 'bg-navy-500 text-white border-navy-500' : 'bg-white border-navy-100 text-navy-500'}">All ${getSemiFinalWords(setId,'all').length}</button>
+        ${tagKeys.map(k => {
+          const meta = SEMIFINAL_TAG_META[k];
+          const count = getSemiFinalWords(setId, k).length;
+          return `<button onclick="window.b4t.renderSemiFinalLab('${setId}','${k}')" class="filter-pill px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition ${tag === k ? 'bg-navy-500 text-white border-navy-500' : 'bg-white border-navy-100 text-navy-500 hover:bg-blue-50'}">${meta.icon} ${meta.name} ${count}</button>`;
+        }).join('')}
+      </div>
+      <div class="premium-card rounded-2xl p-4 mb-4 bg-sky-50/50 border border-sky-100">
+        <p class="font-display font-bold text-navy-500">${activeMeta.icon} ${escapeHtml(activeMeta.title)} — ${escapeHtml(activeMeta.label)}</p>
+        <p class="text-sm text-navy-500/70">Showing ${words.length} words. Level 4 should become near-automatic; Level 5 is stretch training.</p>
+      </div>
+      <div class="space-y-3">${words.slice(0, 100).map(renderSemiFinalCard).join('')}</div>
+    </div></div></div>
+  `;
+}
+
+function renderSemiFinalCard(item) {
+  const setMeta = SEMIFINAL_SET_META[item.setId] || { icon: '🎙️', title: item.setId };
+  return `
+    <div class="premium-card rounded-2xl p-4">
+      <div class="flex items-start justify-between gap-3">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 flex-wrap mb-1">
+            <p class="font-display text-2xl font-bold text-navy-500">${escapeHtml(item.word)}</p>
+            <span class="bg-sky-50 border border-sky-100 text-sky-700 text-[10px] font-bold px-2 py-0.5 rounded-full">${setMeta.icon} #${item.number}</span>
+            ${item.uk_us ? `<span class="bg-indigo-50 border border-indigo-100 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded-full">🇬🇧 UK alert</span>` : ''}
+          </div>
+          <p class="text-sm text-navy-500/75">${escapeHtml(item.note || '')}</p>
+        </div>
+        <button onclick="window.b4t.openSemiFinalCard('${escapeHtml(item.setId)}', ${item.number})" class="bg-amber-100 hover:bg-amber-200 active:bg-amber-300 text-amber-800 font-bold text-xs uppercase tracking-wider px-3 py-2 rounded-full border border-amber-300 transition shadow-sm flex-shrink-0">Learn</button>
+      </div>
+      <div class="flex gap-1.5 flex-wrap mt-3">
+        ${(item.tags || []).map(k => { const meta = SEMIFINAL_TAG_META[k] || { icon: '•', name: k }; return `<span class="text-[11px] bg-navy-50 border border-navy-100 text-navy-500 rounded-full px-2 py-1">${meta.icon} ${escapeHtml(meta.name)}</span>`; }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function openSemiFinalCard(setId, number) {
+  const item = SEMIFINAL_WORDS.find(x => x.setId === setId && Number(x.number) === Number(number));
+  if (!item) return;
+  const setMeta = SEMIFINAL_SET_META[item.setId] || { icon: '🎙️', title: item.setId, label: '' };
+  const distractors = createSemiFinalDistractors(item.word);
+  app().innerHTML = `
+    <div class="screen animate-fade-in"><div class="screen-scroll flex flex-col"><div class="max-w-2xl mx-auto w-full flex flex-col flex-1 px-5 pt-8 pb-6">
+      <button onclick="window.b4t.renderSemiFinalLab('${setId}','all')" class="mb-5 bg-amber-100 hover:bg-amber-200 active:bg-amber-300 text-amber-800 font-bold rounded-full px-4 py-2 inline-flex items-center gap-1.5 transition shadow-sm border border-amber-300">← Back</button>
+      <div class="hero-gradient diagonal-pattern text-white rounded-3xl p-6 mb-4">
+        <p class="text-xs uppercase tracking-wider opacity-70 mb-2">${setMeta.icon} ${escapeHtml(setMeta.title)} · ${escapeHtml(setMeta.label)} · #${item.number}</p>
+        <div class="flex items-center gap-3 flex-wrap">
+          <p class="font-display text-5xl font-bold">${escapeHtml(item.word)}</p>
+          <button onclick="window.b4t.speakLearnWord('${escapeHtml(item.word)}')" class="bg-white/15 hover:bg-white/25 text-white rounded-full px-4 py-2 text-sm font-bold">🔊 Listen</button>
+        </div>
+      </div>
+      <div class="premium-card rounded-3xl p-5 mb-4 space-y-4">
+        <p class="bg-sky-50 rounded-xl p-4 text-navy-500"><b>Focus:</b> ${escapeHtml(item.note || 'Semi-final priority word.')}</p>
+        ${item.uk_us ? `<p class="bg-indigo-50 rounded-xl p-4 text-navy-500"><b>UK/US warning:</b> Competition list uses <b>${escapeHtml(item.word)}</b>. US spelling: <b>${escapeHtml(item.uk_us)}</b>.</p>` : ''}
+        <div><p class="text-xs uppercase tracking-wider font-semibold text-navy-500/50 mb-2">Common distractors for drill</p><div class="flex gap-2 flex-wrap">${distractors.map(x => `<span class="font-mono text-red-700 line-through bg-red-50 border border-red-100 rounded-full px-3 py-1">${escapeHtml(x)}</span>`).join('')}</div></div>
+        <div class="flex gap-1.5 flex-wrap">${(item.tags || []).map(k => { const meta = SEMIFINAL_TAG_META[k] || {icon:'•', name:k}; return `<span class="text-[11px] bg-navy-50 border border-navy-100 text-navy-500 rounded-full px-2 py-1">${meta.icon} ${escapeHtml(meta.name)}</span>`; }).join('')}</div>
+      </div>
+      <button onclick="window.b4t.startSemiFinalDrill('${setId}', 'all')" class="btn-primary w-full py-4 rounded-xl font-bold mt-auto">Practice this set</button>
+    </div></div></div>
+  `;
+}
+
+function startSemiFinalDrill(setId = '2024-L4', tag = 'all') {
+  const pool = getSemiFinalWords(setId, tag);
+  const items = shuffleArray(pool).slice(0, 10);
+  state.session = { type: 'semifinal-drill', items, index: 0, correct: 0, setId, tag };
+  renderSemiFinalDrill();
+}
+
+function renderSemiFinalDrill() {
+  const s = state.session;
+  if (!s || s.type !== 'semifinal-drill') return;
+  if (s.index >= s.items.length) return renderSelectionDrillEnd('Semi-final Prep', () => `window.b4t.renderSemiFinalLab('${s.setId || '2024-L4'}','${s.tag || 'all'}')`);
+  const item = s.items[s.index];
+  const choices = shuffleArray([item.word, ...createSemiFinalDistractors(item.word)]).slice(0, 4);
+  app().innerHTML = `
+    <div class="screen animate-fade-in"><div class="screen-scroll flex flex-col"><div class="max-w-2xl mx-auto w-full flex flex-col flex-1 px-5 pt-8 pb-6">
+      <div class="flex items-center gap-3 mb-6">
+        <button onclick="window.b4t.renderSemiFinalLab('${s.setId || '2024-L4'}','${s.tag || 'all'}')" class="bg-amber-100 hover:bg-amber-200 active:bg-amber-300 text-amber-800 font-bold rounded-full px-4 py-2 flex items-center gap-1.5 transition shadow-sm border border-amber-300">Back</button>
+        <div><p class="text-xs tracking-wider uppercase font-semibold text-navy-500/50">Semi-final Mastery · ${s.index + 1}/${s.items.length}</p><h1 class="font-display text-3xl font-bold text-navy-500">Choose correct spelling</h1></div>
+      </div>
+      <div class="premium-card rounded-3xl p-6 mb-4">
+        <div class="flex items-center justify-between gap-3 mb-4"><p class="text-sm text-navy-500/70">Listen first, then choose the exact competition spelling.</p><button onclick="window.b4t.speakLearnWord('${escapeHtml(item.word)}')" class="bg-navy-50 hover:bg-navy-100 text-navy-500 rounded-full px-4 py-2 text-sm font-bold">🔊 Listen</button></div>
+        <div class="grid gap-3">${choices.map(x => `<button onclick="window.b4t.submitSemiFinalDrill('${escapeHtml(x)}')" class="btn-secondary py-4 rounded-xl font-mono text-lg font-bold">${escapeHtml(x)}</button>`).join('')}</div>
+      </div>
+    </div></div></div>
+  `;
+}
+
+function submitSemiFinalDrill(choice) {
+  const s = state.session;
+  const item = s.items[s.index];
+  const ok = normalizeAnswer(choice) === normalizeAnswer(item.word);
+  if (ok) s.correct++;
+  else logLearnMistake(item.word);
+  app().innerHTML = `
+    <div class="screen animate-fade-in"><div class="screen-scroll flex flex-col"><div class="max-w-2xl mx-auto w-full flex flex-col flex-1 px-5 pt-10 pb-6">
+      <div class="text-center mb-6"><div class="text-6xl mb-3">${ok ? '✅' : '🎯'}</div><p class="font-display text-3xl font-bold text-navy-500">${ok ? 'Correct!' : 'Semi-final word'}</p></div>
+      <div class="premium-card rounded-3xl p-6 mb-4">
+        <p class="text-xs uppercase tracking-wider font-semibold text-navy-500/50 mb-2">Answer</p>
+        <div class="flex items-center gap-3 flex-wrap mb-3"><p class="font-display text-4xl font-bold text-navy-500">${escapeHtml(item.word)}</p><button onclick="window.b4t.speakLearnWord('${escapeHtml(item.word)}')" class="bg-navy-50 hover:bg-navy-100 text-navy-500 rounded-full px-4 py-2 text-sm font-bold">🔊 Listen</button></div>
+        ${!ok ? `<p class="text-sm text-red-600 mb-3">Your answer: ${escapeHtml(choice || '(blank)')}</p>` : ''}
+        <p class="bg-sky-50 rounded-xl p-4 text-navy-500"><b>Technique:</b> ${escapeHtml(item.note || 'Review this word again.')}</p>
+        ${item.uk_us ? `<p class="bg-indigo-50 rounded-xl p-4 text-navy-500 mt-3"><b>UK/US alert:</b> ${escapeHtml(item.word)} vs US ${escapeHtml(item.uk_us)}</p>` : ''}
+      </div>
+      <button onclick="window.b4t.nextSemiFinalDrill()" class="btn-primary w-full py-4 rounded-xl font-bold mt-auto">Continue</button>
+    </div></div></div>
+  `;
+}
+
+function nextSemiFinalDrill() {
+  const s = state.session;
+  s.index++;
+  renderSemiFinalDrill();
+}
+
 // ============================================================
 // SELECTION ROUND: ROOTS LAB + CHAMPIONSHIP TRAPS
 // ============================================================
@@ -2412,6 +2565,11 @@ Object.assign(window.b4t, {
   speakLearnWord,
   startLearnDrill,
   reviewLearnMistakes,
+  renderSemiFinalLab,
+  openSemiFinalCard,
+  startSemiFinalDrill,
+  submitSemiFinalDrill,
+  nextSemiFinalDrill,
   renderRootsLab,
   openRootCard,
   startRootDrill,
