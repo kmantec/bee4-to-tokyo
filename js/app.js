@@ -279,6 +279,38 @@ function renderHome() {
       <div class="screen-scroll px-4 pt-4 pb-2">
         <div class="max-w-2xl mx-auto">
 
+          <style>
+            @keyframes beeFloatA {
+              0%,100% { transform: translate(0,0) rotate(-4deg); }
+              25% { transform: translate(6px,-7px) rotate(4deg); }
+              50% { transform: translate(13px,4px) rotate(-2deg); }
+              75% { transform: translate(5px,9px) rotate(3deg); }
+            }
+            @keyframes beeFloatB {
+              0%,100% { transform: translate(0,0) rotate(3deg); }
+              20% { transform: translate(-8px,-6px) rotate(-4deg); }
+              50% { transform: translate(9px,-10px) rotate(2deg); }
+              80% { transform: translate(12px,6px) rotate(-2deg); }
+            }
+            @keyframes beeFloatC {
+              0%,100% { transform: translate(0,0); }
+              30% { transform: translate(10px,-8px); }
+              60% { transform: translate(-5px,8px); }
+            }
+            .journey-bee { position:absolute; pointer-events:none; filter: drop-shadow(0 4px 8px rgba(15,42,68,.12)); }
+            .journey-dots::before {
+              content:'';
+              position:absolute;
+              inset:auto 18px 18px auto;
+              width:90px;
+              height:34px;
+              border-top:2px dashed rgba(245,176,65,.35);
+              border-right:2px dashed rgba(245,176,65,.28);
+              border-radius:999px;
+              transform: rotate(-10deg);
+            }
+          </style>
+
           <!-- Header -->
           <div class="flex justify-between items-start mb-3">
             <div>
@@ -291,8 +323,26 @@ function renderHome() {
             </button>
           </div>
 
+          <!-- Journey banner -->
+          <div class="relative overflow-hidden rounded-3xl mb-3 bg-gradient-to-r from-sky-50 via-amber-50 to-emerald-50 border border-amber-100 p-4 md:p-5 shadow-sm journey-dots">
+            <span class="journey-bee text-xl" style="left:12px;top:12px;animation:beeFloatA 4.2s ease-in-out infinite;">🐝</span>
+            <span class="journey-bee text-lg" style="right:18px;top:10px;animation:beeFloatB 5s ease-in-out infinite;">🐝</span>
+            <span class="journey-bee text-base" style="right:58px;bottom:12px;animation:beeFloatC 4.8s ease-in-out infinite;">🐝</span>
+            <div class="pr-10 md:pr-20 pl-7 md:pl-8">
+              <p class="text-[11px] font-bold tracking-[0.24em] uppercase text-navy-500/55 mb-1">Journey update</p>
+              <h2 class="font-display text-xl md:text-2xl font-bold text-navy-500 leading-tight">Tokyo was the dream ✈️<br class="hidden sm:block"> Malaysia is the destination 🇲🇾</h2>
+              <p class="mt-2 text-sm text-navy-500/72 leading-snug">A little Bee4 app became Pingping’s warm world-finals journey — built with love, practice, and a few cheerful bees along the way.</p>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <span class="inline-flex items-center gap-1 rounded-full bg-white/80 border border-amber-100 px-3 py-1 text-xs font-semibold text-navy-500">🌍 World Finals 2026</span>
+                <span class="inline-flex items-center gap-1 rounded-full bg-white/80 border border-amber-100 px-3 py-1 text-xs font-semibold text-navy-500">📍 Ipoh, Malaysia</span>
+                <span class="inline-flex items-center gap-1 rounded-full bg-white/80 border border-amber-100 px-3 py-1 text-xs font-semibold text-navy-500">💛 Bee4 to the World</span>
+              </div>
+            </div>
+          </div>
+
           <!-- Streak hero (compact) -->
           <div class="hero-gradient diagonal-pattern text-white rounded-2xl p-4 relative overflow-hidden mb-3 flex items-center gap-4">
+            <div class="absolute right-3 top-2 text-xl opacity-70" style="animation:beeFloatB 4.4s ease-in-out infinite;">🐝</div>
             <div class="flex-shrink-0">
               <p class="font-display italic text-xs opacity-80">Day Streak</p>
               <p class="font-display text-5xl font-bold leading-none num-badge">${p.streakDays}</p>
@@ -323,14 +373,16 @@ function renderHome() {
 
           <!-- Bottom action row: Learn + Mock (2 columns on iPad+) -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <button onclick="showScreen('learn')" class="premium-card p-3 rounded-2xl flex items-center gap-3 text-left border-amber-200 bg-amber-50/50">
+            <button onclick="showScreen('learn')" class="premium-card p-3 rounded-2xl flex items-center gap-3 text-left border-amber-200 bg-amber-50/50 relative overflow-hidden">
+              <div class="absolute right-3 top-2 text-sm opacity-70" style="animation:beeFloatA 4.8s ease-in-out infinite;">🐝</div>
               <div class="text-2xl">🧠</div>
               <div class="flex-1 min-w-0">
                 <p class="font-display text-base font-bold text-navy-500 leading-tight">Learn Mode</p>
                 <p class="text-xs text-navy-500/60 leading-tight">Patterns & techniques</p>
               </div>
             </button>
-            <button onclick="window.b4t.startMock()" class="btn-primary p-3 rounded-2xl flex items-center gap-3 text-left">
+            <button onclick="window.b4t.startMock()" class="btn-primary p-3 rounded-2xl flex items-center gap-3 text-left relative overflow-hidden">
+              <div class="absolute right-3 top-2 text-sm opacity-80" style="animation:beeFloatC 5.2s ease-in-out infinite;">🐝</div>
               <div class="bg-white/10 rounded-lg p-2 flex-shrink-0">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871"/></svg>
               </div>
@@ -1651,6 +1703,12 @@ function renderLearnMode() {
         ${drillButton('pattern',    '🧩', 'Pattern Drill',     'suffix, prefix, family')}
         ${drillButton('error',      '🎯', 'Error Instinct',    'choose correct spelling')}
         ${drillButton('brainstorm', '💡', 'Brainstorm Logic',  'definition → word')}
+        <button onclick="window.b4t.renderWorldSprintLab()" class="premium-card rounded-2xl p-4 text-left relative overflow-hidden border-2 border-violet-300 bg-violet-50/80 shadow-lg">
+          <span class="absolute top-3 right-3 bg-violet-700 text-white text-[10px] font-black tracking-wider px-2 py-1 rounded-full">15 DAYS</span>
+          <div class="text-4xl mb-2">🌍</div>
+          <p class="font-display font-bold text-navy-500">World Sprint</p>
+          <p class="text-xs text-navy-500/60">harder, short daily drills</p>
+        </button>
         <button onclick="window.b4t.renderSemiFinalLab()" class="premium-card rounded-2xl p-4 text-left relative overflow-hidden border-2 border-sky-300 bg-sky-50/80 shadow-md">
           <span class="absolute top-3 right-3 bg-sky-600 text-white text-[10px] font-black tracking-wider px-2 py-1 rounded-full">NEW</span>
           <div class="text-4xl mb-2">🎙️</div>
@@ -1680,7 +1738,7 @@ function renderLearnMode() {
 
       <div class="premium-card rounded-2xl p-4 mb-5">
         <p class="font-display font-bold text-navy-500 text-lg">Coverage</p>
-        <p class="text-sm text-navy-500/70">${HIGH_VALUE_WORDS.length} high-value words · ${ROOTS.length} roots · ${CHAMPIONSHIP_TRAPS.length} trap words · ${SEMIFINAL_WORDS.length} semi-final words</p>
+        <p class="text-sm text-navy-500/70">${HIGH_VALUE_WORDS.length} high-value words · ${ROOTS.length} roots · ${CHAMPIONSHIP_TRAPS.length} trap words · ${SEMIFINAL_WORDS.length} semi-final words · World Sprint Lite</p>
         <p class="text-xs text-navy-500/50 mt-1">Tap LEARN to open a mini lesson and quick quiz.</p>
       </div>
 
@@ -2542,6 +2600,171 @@ function nextTrapDrill() {
   renderTrapDrill();
 }
 
+
+// ============================================================
+// WORLD SPRINT LITE (15-DAY PATCH)
+// ============================================================
+function worldSprintPick(setId, n, tag = 'all') {
+  return shuffleArray(getSemiFinalWords(setId, tag)).slice(0, n);
+}
+
+function buildWorldSprintItems(mode) {
+  if (mode === 'l4') return worldSprintPick('2024-L4', 10);
+  if (mode === 'l5') return worldSprintPick('2024-L5', 10);
+  if (mode === 'monster') {
+    const monsterWords = new Set([
+      'approbation','archetypal','biocompatibility','commensurate',
+      'counterintelligence','counterintuitive','diaphanous','disentangling',
+      'disintegration','environmentalist','idiosyncratic','incomprehensibility',
+      'indispensable','lieutenant','narcissistic','preposterous',
+      'recalcitrant','redoubtable','serendipity','superfluous',
+      'sustainability','susurration','systematically','tangential'
+    ]);
+    const pool = getSemiFinalWords('2024-L6', 'all').filter(x => monsterWords.has(x.word));
+    return shuffleArray(pool).slice(0, 8);
+  }
+  if (mode === 'pronouncer') return shuffleArray([
+    ...worldSprintPick('2024-L4', 4),
+    ...worldSprintPick('2024-L5', 3),
+    ...worldSprintPick('2024-L6', 1)
+  ]);
+  // Balanced 15-minute daily sprint: about 50% L4, 35% L5, 15% L6.
+  return shuffleArray([
+    ...worldSprintPick('2024-L4', 6),
+    ...worldSprintPick('2024-L5', 4),
+    ...worldSprintPick('2024-L6', 2)
+  ]);
+}
+
+function renderWorldSprintLab() {
+  const l4 = getSemiFinalWords('2024-L4','all').length;
+  const l5 = getSemiFinalWords('2024-L5','all').length;
+  const l6 = getSemiFinalWords('2024-L6','all').length;
+  app().innerHTML = `
+    <div class="screen has-nav animate-fade-in"><div class="screen-scroll px-5 pt-8 pb-28"><div class="max-w-2xl mx-auto">
+      <div class="flex items-center gap-3 mb-5">
+        <button onclick="showScreen('learn')" class="bg-amber-100 hover:bg-amber-200 active:bg-amber-300 text-amber-800 font-bold rounded-full px-4 py-2 flex items-center gap-1.5 transition shadow-sm border border-amber-300">← Back</button>
+        <div><p class="text-xs font-semibold text-navy-500/50 tracking-wider uppercase">World Finals Prep · 15-Day Lite</p><h1 class="font-display text-3xl font-bold text-navy-500">🌍 World Sprint</h1></div>
+      </div>
+      <div class="hero-gradient diagonal-pattern text-white rounded-3xl p-6 mb-5">
+        <p class="font-display text-3xl font-bold leading-tight">Harder, but not heavier.</p>
+        <p class="text-sm opacity-85 mt-3">Designed for school days: 10–20 minutes. Keep old practice, add short high-impact drills.</p>
+      </div>
+      <div class="premium-card rounded-2xl p-4 mb-5 bg-violet-50/60 border border-violet-100">
+        <p class="font-display font-bold text-navy-500 text-lg">Daily recipe</p>
+        <p class="text-sm text-navy-500/70 mt-1">6 Core L4 + 4 Stretch L5 + 2 Monster L6. The goal is confidence, not exhaustion.</p>
+      </div>
+      <div class="grid grid-cols-2 gap-3 mb-5">
+        <button onclick="window.b4t.startWorldSprint('daily')" class="premium-card rounded-2xl p-4 text-left border-2 border-violet-300 bg-violet-50/80 shadow-md">
+          <div class="text-4xl mb-2">🚀</div><p class="font-display font-bold text-navy-500">Start Daily Sprint</p><p class="text-xs text-navy-500/60">12 words · mixed L4/L5/L6</p>
+        </button>
+        <button onclick="window.b4t.startWorldSprint('pronouncer')" class="premium-card rounded-2xl p-4 text-left border-2 border-sky-300 bg-sky-50/80 shadow-md">
+          <div class="text-4xl mb-2">🎙️</div><p class="font-display font-bold text-navy-500">Pronouncer Lite</p><p class="text-xs text-navy-500/60">listen → type spelling</p>
+        </button>
+        <button onclick="window.b4t.startWorldSprint('l4')" class="premium-card rounded-2xl p-4 text-left">
+          <div class="text-3xl mb-2">🥇</div><p class="font-display font-bold text-navy-500">Core Level 4</p><p class="text-xs text-navy-500/60">must be automatic · ${l4} words</p>
+        </button>
+        <button onclick="window.b4t.startWorldSprint('l5')" class="premium-card rounded-2xl p-4 text-left">
+          <div class="text-3xl mb-2">💪</div><p class="font-display font-bold text-navy-500">Stretch Level 5</p><p class="text-xs text-navy-500/60">harder but realistic · ${l5} words</p>
+        </button>
+        <button onclick="window.b4t.startWorldSprint('monster')" class="premium-card rounded-2xl p-4 text-left col-span-2 border border-rose-200 bg-rose-50/50">
+          <div class="text-3xl mb-2">🐉</div><p class="font-display font-bold text-navy-500">Monster Lite</p><p class="text-xs text-navy-500/60">Level 6 confidence training · ${l6} words</p>
+        </button>
+      </div>
+      <div class="premium-card rounded-2xl p-4">
+        <p class="font-display font-bold text-navy-500">15-day rule</p>
+        <p class="text-sm text-navy-500/70 mt-1">On busy school days, do only <b>Daily Sprint</b> or <b>Pronouncer Lite</b>. Stop while she still feels fresh.</p>
+      </div>
+    </div></div></div>
+  `;
+}
+
+function worldSprintTitle(mode) {
+  if (mode === 'pronouncer') return 'Pronouncer Lite';
+  if (mode === 'l4') return 'Core Level 4';
+  if (mode === 'l5') return 'Stretch Level 5';
+  if (mode === 'monster') return 'Monster Lite';
+  return 'Daily World Sprint';
+}
+
+function startWorldSprint(mode = 'daily') {
+  const items = buildWorldSprintItems(mode);
+  state.session = { type: 'world-sprint', mode, items, index: 0, correct: 0 };
+  renderWorldSprintDrill();
+}
+
+function renderWorldSprintDrill() {
+  const s = state.session;
+  if (!s || s.type !== 'world-sprint') return;
+  if (s.index >= s.items.length) return renderSelectionDrillEnd(worldSprintTitle(s.mode), () => "window.b4t.renderWorldSprintLab()");
+  const item = s.items[s.index];
+  const isTyping = s.mode === 'pronouncer';
+  const setMeta = SEMIFINAL_SET_META[item.setId] || { icon:'🌍', title:item.setId, label:'' };
+  const choices = isTyping ? [] : shuffleArray([item.word, ...createSemiFinalDistractors(item.word)]).slice(0, 4);
+  app().innerHTML = `
+    <div class="screen animate-fade-in"><div class="screen-scroll flex flex-col"><div class="max-w-2xl mx-auto w-full flex flex-col flex-1 px-5 pt-8 pb-6">
+      <div class="flex items-center gap-3 mb-6">
+        <button onclick="window.b4t.renderWorldSprintLab()" class="bg-amber-100 hover:bg-amber-200 active:bg-amber-300 text-amber-800 font-bold rounded-full px-4 py-2 flex items-center gap-1.5 transition shadow-sm border border-amber-300">Back</button>
+        <div><p class="text-xs tracking-wider uppercase font-semibold text-navy-500/50">${escapeHtml(worldSprintTitle(s.mode))} · ${s.index + 1}/${s.items.length}</p><h1 class="font-display text-3xl font-bold text-navy-500">${isTyping ? 'Listen and spell' : 'Choose exact spelling'}</h1></div>
+      </div>
+      <div class="premium-card rounded-3xl p-6 mb-4">
+        <div class="flex items-center justify-between gap-3 mb-4">
+          <div>
+            <p class="text-xs uppercase tracking-wider font-semibold text-navy-500/50 mb-1">${setMeta.icon} ${escapeHtml(setMeta.title)} · ${escapeHtml(setMeta.label)}</p>
+            <p class="text-sm text-navy-500/70">${isTyping ? 'Listen first. Type the word without seeing it.' : 'Listen, then avoid the distractors.'}</p>
+          </div>
+          <button onclick="window.b4t.speakLearnWord('${escapeHtml(item.word)}')" class="bg-navy-50 hover:bg-navy-100 text-navy-500 rounded-full px-4 py-2 text-sm font-bold">🔊 Listen</button>
+        </div>
+        ${isTyping ? `
+          <input id="worldSprintAnswer" class="w-full rounded-2xl border border-navy-100 bg-white px-4 py-4 text-2xl font-mono font-bold text-navy-500 outline-none focus:ring-2 focus:ring-violet-300" placeholder="Type spelling..." autocomplete="off" autocapitalize="none" spellcheck="false" />
+          <button onclick="window.b4t.submitWorldSprintDrill(document.getElementById('worldSprintAnswer').value)" class="btn-primary w-full py-4 rounded-xl font-bold mt-4">Check</button>
+        ` : `
+          <div class="grid gap-3">${choices.map(x => `<button onclick="window.b4t.submitWorldSprintDrill('${escapeHtml(x)}')" class="btn-secondary py-4 rounded-xl font-mono text-lg font-bold">${escapeHtml(x)}</button>`).join('')}</div>
+        `}
+      </div>
+      ${item.uk_us ? `<div class="premium-card rounded-2xl p-4 bg-indigo-50/60 border border-indigo-100"><p class="text-sm text-navy-500"><b>UK/US alert:</b> competition spelling may differ from American school spelling.</p></div>` : ''}
+    </div></div></div>
+  `;
+  if (isTyping) {
+    setTimeout(() => {
+      const input = document.getElementById('worldSprintAnswer');
+      if (input) {
+        input.focus();
+        input.addEventListener('keydown', (e) => { if (e.key === 'Enter') window.b4t.submitWorldSprintDrill(input.value); });
+      }
+      try { window.b4t.speakLearnWord(item.word); } catch {}
+    }, 150);
+  }
+}
+
+function submitWorldSprintDrill(choice) {
+  const s = state.session;
+  const item = s.items[s.index];
+  const ok = normalizeAnswer(choice) === normalizeAnswer(item.word);
+  if (ok) s.correct++;
+  else logLearnMistake(item.word);
+  const setMeta = SEMIFINAL_SET_META[item.setId] || { icon:'🌍', title:item.setId, label:'' };
+  app().innerHTML = `
+    <div class="screen animate-fade-in"><div class="screen-scroll flex flex-col"><div class="max-w-2xl mx-auto w-full flex flex-col flex-1 px-5 pt-10 pb-6">
+      <div class="text-center mb-6"><div class="text-6xl mb-3">${ok ? '✅' : '🎯'}</div><p class="font-display text-3xl font-bold text-navy-500">${ok ? 'Correct!' : 'World Sprint word'}</p></div>
+      <div class="premium-card rounded-3xl p-6 mb-4">
+        <p class="text-xs uppercase tracking-wider font-semibold text-navy-500/50 mb-2">${setMeta.icon} ${escapeHtml(setMeta.title)} · ${escapeHtml(setMeta.label)}</p>
+        <div class="flex items-center gap-3 flex-wrap mb-3"><p class="font-display text-4xl font-bold text-navy-500">${escapeHtml(item.word)}</p><button onclick="window.b4t.speakLearnWord('${escapeHtml(item.word)}')" class="bg-navy-50 hover:bg-navy-100 text-navy-500 rounded-full px-4 py-2 text-sm font-bold">🔊 Listen</button></div>
+        ${!ok ? `<p class="text-sm text-red-600 mb-3">Your answer: ${escapeHtml(choice || '(blank)')}</p>` : ''}
+        <p class="bg-violet-50 rounded-xl p-4 text-navy-500"><b>Focus:</b> ${escapeHtml(item.note || 'Review the exact spelling pattern.')}</p>
+        ${item.uk_us ? `<p class="bg-indigo-50 rounded-xl p-4 text-navy-500 mt-3"><b>UK/US alert:</b> ${escapeHtml(item.word)} vs US ${escapeHtml(item.uk_us)}</p>` : ''}
+        <div class="mt-3 flex gap-1.5 flex-wrap">${(item.tags || []).map(k => { const meta = SEMIFINAL_TAG_META[k] || {icon:'•', name:k}; return `<span class="text-[11px] bg-navy-50 border border-navy-100 text-navy-500 rounded-full px-2 py-1">${meta.icon} ${escapeHtml(meta.name)}</span>`; }).join('')}</div>
+      </div>
+      <button onclick="window.b4t.nextWorldSprintDrill()" class="btn-primary w-full py-4 rounded-xl font-bold mt-auto">Continue</button>
+    </div></div></div>
+  `;
+}
+
+function nextWorldSprintDrill() {
+  state.session.index++;
+  renderWorldSprintDrill();
+}
+
 function renderSelectionDrillEnd(title, backActionFactory) {
   const s = state.session;
   const backAction = backActionFactory ? backActionFactory() : "showScreen('learn')";
@@ -2565,6 +2788,10 @@ Object.assign(window.b4t, {
   speakLearnWord,
   startLearnDrill,
   reviewLearnMistakes,
+  renderWorldSprintLab,
+  startWorldSprint,
+  submitWorldSprintDrill,
+  nextWorldSprintDrill,
   renderSemiFinalLab,
   openSemiFinalCard,
   startSemiFinalDrill,
