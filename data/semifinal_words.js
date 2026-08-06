@@ -7910,8 +7910,8 @@ export function createSemiFinalDistractors(word) {
   const variants = new Set();
   const add = x => { if (x && x !== w && /^[a-z-]+$/.test(x)) variants.add(x); };
 
-  // Common competition misspellings generated from patterns
-  add(w.replace(/([a-z])\1/g, '$1')); // harmless fallback; real double handling below
+  // High-value spelling traps first.
+  add(w.replace(/([a-z])\1/g, '$1'));
   const doubles = w.match(/([a-z])\1/g) || [];
   for (const d of doubles) add(w.replace(d, d[0]));
   if (w.includes('ie')) add(w.replace('ie', 'ei'));
@@ -7926,20 +7926,36 @@ export function createSemiFinalDistractors(word) {
   if (w.startsWith('in')) add(w.replace(/^in/, 'im'));
   if (w.startsWith('im')) add(w.replace(/^im/, 'in'));
   if (w.endsWith('y')) add(w.slice(0, -1) + 'ie');
-  if (w.length > 7) add(w.slice(0, -1));
-  if (w.length > 6) add(w + 'e');
 
-  // Specific high-value alternatives / UK-US distractions
+  // Hand-checked common alternatives and competition traps.
   const manual = {
     behaviour: ['behavior'], jewellery: ['jewelry'], counselling: ['counseling'], millimetre: ['millimeter'], catalogue: ['catalog'], aluminium: ['aluminum'],
     parallel: ['paralel', 'parrallel'], embarrassing: ['embarassing', 'embarrasing'], cancellation: ['cancelation'],
     accessible: ['accesible', 'accessable'], anniversary: ['anniversery'], opportunities: ['oportunities'],
-    parliament: ['parliment'], preferable: ['preferrable'], occurrence: ['occurence'], millennium: ['millenium'],
-    imminent: ['iminent', 'eminent'], liquefy: ['liquify'], accommodate: ['acommodate', 'accomodate']
+    parliament: ['parliment'], preferable: ['preferrable'], millennium: ['millenium'],
+    imminent: ['iminent', 'eminent'], liquefy: ['liquify'], lieutenant: ['lieutennant'],
+    idiosyncratic: ['ideosyncratic'], incomprehensibility: ['incomprehensability'],
+    recalcitrant: ['recalcitrent'], serendipity: ['serendepity'],
+    susurration: ['susuration'], fluorescent: ['flourescent'],
+    questionnaire: ['questionaire'], conscientious: ['consciencious'],
+    supersede: ['supercede'], accommodate: ['acommodate', 'accomodate']
   };
   (manual[w] || []).forEach(add);
 
-  const arr = [...variants].slice(0, 3);
-  while (arr.length < 3) arr.push(w + (arr.length + 1));
-  return arr;
+  // Plausible fallback edits. Never show artificial answers such as word1/word2.
+  const vowels = 'aeiou';
+  for (let i = 1; i < w.length - 1 && variants.size < 8; i++) {
+    if (vowels.includes(w[i])) {
+      const replacement = vowels[(vowels.indexOf(w[i]) + 1) % vowels.length];
+      add(w.slice(0, i) + replacement + w.slice(i + 1));
+    }
+  }
+  for (let i = 1; i < w.length - 1 && variants.size < 8; i++) {
+    if (w[i] !== w[i + 1]) add(w.slice(0, i) + w[i + 1] + w[i] + w.slice(i + 2));
+  }
+  for (let i = 2; i < w.length - 1 && variants.size < 8; i++) {
+    add(w.slice(0, i) + w.slice(i + 1));
+  }
+
+  return [...variants].slice(0, 3);
 }
