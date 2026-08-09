@@ -71,21 +71,74 @@ function defaultProgress() {
 // SPEECH (Web Speech API)
 // ============================================================
 let englishVoice = null;
+let englishVoices = [];
+const VOICE_STORAGE_KEY = 'b4t_selected_voice';
+
+function voiceKey(v) {
+  return v ? `${v.voiceURI || v.name}|||${v.lang}` : '';
+}
+
+function chooseDefaultEnglishVoice(voices) {
+  return (
+    voices.find(v => v.lang.startsWith('en-GB') && /female|kate|serena|moira|siri/i.test(v.name)) ||
+    voices.find(v => v.lang.startsWith('en-US') && /female|samantha|karen|ava|siri/i.test(v.name)) ||
+    voices.find(v => v.lang.startsWith('en-GB')) ||
+    voices.find(v => v.lang.startsWith('en-US')) ||
+    voices.find(v => v.lang.startsWith('en')) ||
+    voices[0] || null
+  );
+}
+
+function refreshVoicePickers() {
+  document.querySelectorAll('[data-voice-select]').forEach(select => {
+    const current = englishVoice ? voiceKey(englishVoice) : '';
+    const oldValue = select.value;
+    select.innerHTML = englishVoices.length
+      ? englishVoices.map(v => `<option value="${escapeHtml(voiceKey(v))}">${escapeHtml(v.name)} · ${escapeHtml(v.lang)}</option>`).join('')
+      : '<option value="">Default English voice</option>';
+    select.value = current || oldValue || '';
+  });
+}
 
 function initSpeech() {
   if (!('speechSynthesis' in window)) return;
   const load = () => {
     const voices = window.speechSynthesis.getVoices();
-    englishVoice =
-      voices.find(v => v.lang.startsWith('en-GB') && /female|kate|serena|moira/i.test(v.name)) ||
-      voices.find(v => v.lang.startsWith('en-US') && /samantha|karen|ava/i.test(v.name)) ||
-      voices.find(v => v.lang.startsWith('en-GB')) ||
-      voices.find(v => v.lang.startsWith('en-US')) ||
-      voices.find(v => v.lang.startsWith('en')) ||
-      voices[0];
+    englishVoices = voices.filter(v => /^en([_-]|$)/i.test(v.lang));
+    const saved = localStorage.getItem(VOICE_STORAGE_KEY);
+    englishVoice = englishVoices.find(v => voiceKey(v) === saved) || chooseDefaultEnglishVoice(englishVoices.length ? englishVoices : voices);
+    refreshVoicePickers();
   };
   load();
   window.speechSynthesis.onvoiceschanged = load;
+}
+
+function setSpeechVoice(key) {
+  const picked = englishVoices.find(v => voiceKey(v) === key);
+  if (!picked) return;
+  englishVoice = picked;
+  localStorage.setItem(VOICE_STORAGE_KEY, voiceKey(picked));
+  refreshVoicePickers();
+}
+
+function voicePickerHtml() {
+  return `
+    <div class="premium-card rounded-2xl p-3 flex flex-col sm:flex-row sm:items-center gap-2">
+      <div class="flex items-center gap-2 min-w-0 flex-1">
+        <span class="text-xl">🎙️</span>
+        <div class="min-w-0 flex-1">
+          <p class="font-display font-bold text-navy-500 text-sm">Pronouncer Voice</p>
+          <select data-voice-select onchange="window.b4t.setSpeechVoice(this.value)" class="mt-1 w-full bg-white border border-navy-100 rounded-xl px-3 py-2 text-xs text-navy-500">
+            <option value="">Loading voices…</option>
+          </select>
+        </div>
+      </div>
+      <button onclick="window.b4t.previewSpeechVoice()" class="bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 rounded-xl px-3 py-2 text-xs font-bold whitespace-nowrap">🔊 Preview</button>
+    </div>`;
+}
+
+function previewSpeechVoice() {
+  return speak('Hello Pingping. Ready for the World Finals?', { rate: 0.82 });
 }
 
 function speak(text, opts = {}) {
@@ -1026,6 +1079,10 @@ function renderListening() {
         </div>
       </div>
 
+      <div class="px-5 mb-3">
+        ${voicePickerHtml()}
+      </div>
+
       <div class="px-5 mb-4">
         <div class="hero-gradient diagonal-pattern text-white rounded-2xl p-5 flex items-center gap-4">
           <button onclick="window.b4t.playListening()" id="playBtn" class="bg-white/10 hover:bg-white/20 rounded-2xl w-16 h-16 flex items-center justify-center transition flex-shrink-0">
@@ -1063,6 +1120,7 @@ function renderListening() {
     </div></div></div>
   `;
 
+  refreshVoicePickers();
   document.querySelectorAll('[data-gap]').forEach(input => {
     input.addEventListener('input', e => {
       s.answers[e.target.dataset.gap] = e.target.value.trim();
@@ -2650,10 +2708,11 @@ function renderWorldSprintLab() {
         <p class="font-display text-3xl font-bold leading-tight">Harder, but not heavier.</p>
         <p class="text-sm opacity-85 mt-3">Designed for school days: 10–20 minutes. Keep old practice, add short high-impact drills.</p>
       </div>
-      <div class="premium-card rounded-2xl p-4 mb-5 bg-violet-50/60 border border-violet-100">
+      <div class="premium-card rounded-2xl p-4 mb-4 bg-violet-50/60 border border-violet-100">
         <p class="font-display font-bold text-navy-500 text-lg">Daily recipe</p>
         <p class="text-sm text-navy-500/70 mt-1">6 Core L4 + 4 Stretch L5 + 2 Monster L6. The goal is confidence, not exhaustion.</p>
       </div>
+      <div class="mb-5">${voicePickerHtml()}</div>
       <div class="grid grid-cols-2 gap-3 mb-5">
         <button onclick="window.b4t.startWorldSprint('daily')" class="premium-card rounded-2xl p-4 text-left border-2 border-violet-300 bg-violet-50/80 shadow-md">
           <div class="text-4xl mb-2">🚀</div><p class="font-display font-bold text-navy-500">Start Daily Sprint</p><p class="text-xs text-navy-500/60">12 words · mixed L4/L5/L6</p>
@@ -2677,6 +2736,7 @@ function renderWorldSprintLab() {
       </div>
     </div></div></div>
   `;
+  refreshVoicePickers();
 }
 
 function worldSprintTitle(mode) {
@@ -2785,6 +2845,8 @@ function renderSelectionDrillEnd(title, backActionFactory) {
 // PUBLIC API
 // ============================================================
 Object.assign(window.b4t, {
+  setSpeechVoice,
+  previewSpeechVoice,
   speakLearnWord,
   startLearnDrill,
   reviewLearnMistakes,
