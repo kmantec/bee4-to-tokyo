@@ -393,6 +393,11 @@ function renderHome() {
             </div>
           </div>
 
+          <!-- Global voice setting -->
+          <div class="mb-3">
+            ${voicePickerHtml()}
+          </div>
+
           <!-- Streak hero (compact) -->
           <div class="hero-gradient diagonal-pattern text-white rounded-2xl p-4 relative overflow-hidden mb-3 flex items-center gap-4">
             <div class="absolute right-3 top-2 text-xl opacity-70" style="animation:beeFloatB 4.4s ease-in-out infinite;">🐝</div>
@@ -451,6 +456,7 @@ function renderHome() {
       </div>
     </div>
   `;
+  refreshVoicePickers();
 }
 
 function statCard(value, label) {
